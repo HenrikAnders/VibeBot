@@ -34,7 +34,7 @@ namespace VibeBot
             load.Visible = true;
             await Task.Run(() => bot.convert());         
 
-           //tbStatus.AppendText("Normalize\r\n");
+            tbStatus.AppendText("Normalize\r\n");
             await Task.Run(()=> bot.normazize(float.Parse(tbdB.Text, CultureInfo.InvariantCulture.NumberFormat)));
 
             tbStatus.AppendText("Tagging");
@@ -53,7 +53,7 @@ namespace VibeBot
         {
             String regPath = "";
             RegistryKey reg = Registry.CurrentUser;
-            if (reg.GetValueNames().Contains("VibeBotPath"))
+            if (reg.GetValueNames().Contains("VibeBotPath")&& !String.IsNullOrEmpty((string)reg.GetValue("VibeBotPath")))
             {   //if key exists--> get value
                 regPath = (string)reg.GetValue("VibeBotPath");
             }                                

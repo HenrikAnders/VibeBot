@@ -74,7 +74,7 @@ namespace VibeBot
                 if (file.Contains(".flag") || file.Contains(".wav"))
                 {             
                     ProcessStartInfo psi = new ProcessStartInfo();
-                    psi.FileName = @"D:\Visual Studio\Repo\VibeBot\VibeBot\Recources\Lame3.99.5_64\lame.exe";    //pack into exe ?!!
+                    psi.FileName = @"B:\Programme\Visual Studio\Repos\VibeBot\VibeBot\VibeBot\Recources\lame_enc.dll";    //pack into exe ?!!
                     psi.Arguments = "-b 32 --resample 22.05 -m m \"" + file + "\" \"" + file.Replace(".wav", ".mp3") + "\"";
                     psi.WindowStyle = ProcessWindowStyle.Minimized;    
                     Process p= Process.Start(psi);
