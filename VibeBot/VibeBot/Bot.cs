@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
+using System.Linq;                       
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using NAudio;
 
 namespace VibeBot
 {
@@ -88,8 +88,9 @@ namespace VibeBot
         /// <summary>
         /// set the amplitude to 95db
         /// </summary>
-        public async void normazize()
-        {
+        public async void normazize(double db)
+        {      
+            db=(db == 0) ? db  :  6.0;    // if (bd==0)  db0=6.0 else {db=db}
             foreach (string file in Directory.GetFiles(path))
             {
                 if (file.Contains(".flag") || file.Contains(".wav"))
@@ -103,7 +104,7 @@ namespace VibeBot
                     // -d 2.0: makes it 91.0 dB (defaults to 89.0)
                     //  alias mymp3gain = 'mp3gain -c -p -r -d 2.0'
                     #endregion
-                    pp.StartInfo.Arguments = "/r /d 6.0 /k /c " + file;
+                    pp.StartInfo.Arguments = "/r /d " + db + " /k /c " + file;
                     pp.Start();
                     pp.WaitForExit();
                 }
@@ -140,16 +141,8 @@ namespace VibeBot
         {
             foreach (var proc in Process.GetProcessesByName(process))
             {
-                proc.Kill();
-
+                proc.Kill();  
             }
-        }
-        /// <summary>
-        /// set a given process to foreground
-        /// </summary>
-        /// <param name="hwnd"></param>
-        /// <returns></returns>
-        [DllImport("user32")]
-        private static extern bool SetForegroundWindow(IntPtr hwnd);
+        }                                     
     }
 }
