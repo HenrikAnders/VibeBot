@@ -34,7 +34,7 @@ namespace VibeBot
             load.Visible = true;
             await Task.Run(() => bot.convert());         
 
-           //tbStatus.AppendText("Normalize\r\n");
+           tbStatus.AppendText("Normalize\r\n");
             await Task.Run(()=> bot.normazize(float.Parse(tbdB.Text, CultureInfo.InvariantCulture.NumberFormat)));
 
             tbStatus.AppendText("Tagging");

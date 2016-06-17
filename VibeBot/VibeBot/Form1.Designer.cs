@@ -45,7 +45,7 @@
             this.lInfo.AutoScrollMinSize = new System.Drawing.Size(95, 25);
             this.lInfo.AutoSize = false;
             this.lInfo.BackColor = System.Drawing.SystemColors.Window;
-            this.lInfo.Location = new System.Drawing.Point(14, 88);
+            this.lInfo.Location = new System.Drawing.Point(11, 88);
             this.lInfo.Name = "lInfo";
             this.lInfo.Size = new System.Drawing.Size(96, 28);
             this.lInfo.TabIndex = 0;
@@ -66,7 +66,7 @@
             this.tbPath.CustomButton.UseSelectable = true;
             this.tbPath.CustomButton.Visible = false;
             this.tbPath.Lines = new string[0];
-            this.tbPath.Location = new System.Drawing.Point(116, 88);
+            this.tbPath.Location = new System.Drawing.Point(137, 88);
             this.tbPath.MaxLength = 32767;
             this.tbPath.Name = "tbPath";
             this.tbPath.PasswordChar = '\0';
@@ -149,7 +149,7 @@
             this.tbdB.CustomButton.UseSelectable = true;
             this.tbdB.CustomButton.Visible = false;
             this.tbdB.Lines = new string[0];
-            this.tbdB.Location = new System.Drawing.Point(116, 119);
+            this.tbdB.Location = new System.Drawing.Point(137, 119);
             this.tbdB.MaxLength = 32767;
             this.tbdB.Name = "tbdB";
             this.tbdB.PasswordChar = '\0';
@@ -166,14 +166,14 @@
             // lDb
             // 
             this.lDb.AutoScroll = true;
-            this.lDb.AutoScrollMinSize = new System.Drawing.Size(94, 25);
+            this.lDb.AutoScrollMinSize = new System.Drawing.Size(120, 25);
             this.lDb.AutoSize = false;
             this.lDb.BackColor = System.Drawing.SystemColors.Window;
-            this.lDb.Location = new System.Drawing.Point(14, 119);
+            this.lDb.Location = new System.Drawing.Point(11, 119);
             this.lDb.Name = "lDb";
-            this.lDb.Size = new System.Drawing.Size(102, 45);
+            this.lDb.Size = new System.Drawing.Size(120, 45);
             this.lDb.TabIndex = 8;
-            this.lDb.Text = "Increase gain:";
+            this.lDb.Text = "Gain manipulation:";
             // 
             // lUnit
             // 
@@ -181,7 +181,7 @@
             this.lUnit.AutoScrollMinSize = new System.Drawing.Size(27, 25);
             this.lUnit.AutoSize = false;
             this.lUnit.BackColor = System.Drawing.SystemColors.Window;
-            this.lUnit.Location = new System.Drawing.Point(153, 117);
+            this.lUnit.Location = new System.Drawing.Point(174, 116);
             this.lUnit.Name = "lUnit";
             this.lUnit.Size = new System.Drawing.Size(35, 33);
             this.lUnit.TabIndex = 9;

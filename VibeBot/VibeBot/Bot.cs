@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;                       
+using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Forms;
-using NAudio;
+using System.Windows.Forms;    
 
 namespace VibeBot
 {
@@ -72,13 +71,10 @@ namespace VibeBot
             foreach (var file in Directory.GetFiles(path).ToList())
             {
                 if (file.Contains(".flag") || file.Contains(".wav"))
-                {             
-                    ProcessStartInfo psi = new ProcessStartInfo();
-                    psi.FileName = @"D:\Visual Studio\Repo\VibeBot\VibeBot\Recources\Lame3.99.5_64\lame.exe";    //pack into exe ?!!
-                    psi.Arguments = "-b 32 --resample 22.05 -m m \"" + file + "\" \"" + file.Replace(".wav", ".mp3") + "\"";
-                    psi.WindowStyle = ProcessWindowStyle.Minimized;    
-                    Process p= Process.Start(psi);
-                    p.WaitForExit();   
+                {
+                    ProcessStartInfo psi = new ProcessStartInfo();         
+                    Process p = Process.Start("lame.exe", "-b 32 --resample 22.05 -m m \"" + file + "\" \"" + file.Replace(".wav", ".mp3") + "\"");
+                    p.WaitForExit();
                     File.Delete(file);
                 }
             }
@@ -93,10 +89,11 @@ namespace VibeBot
             db=(db == 0) ? db  :  6.0;    // if (bd==0)  db0=6.0 else {db=db}
             foreach (string file in Directory.GetFiles(path))
             {
-                if (file.Contains(".flag") || file.Contains(".wav"))
+                if ( file.Contains(".mp3"))
                 {
-                    Process pp = new Process();
-                    pp.StartInfo.FileName = @"D:\Programme\Download\Mp3Gain\Mp3Gain.exe";
+                    Process pp = new Process();          
+                 //   pp.StartInfo.FileName = @"D:\Programme\Download\Mp3Gain\Mp3Gain.exe";    
+                 //   pp.StartInfo.FileName = AssemblyName.GetAssemblyName("").ToString();      
                     #region param description
                     // -c : ignore clipping
                     //-p  : preserve file modification time
@@ -104,8 +101,9 @@ namespace VibeBot
                     // -d 2.0: makes it 91.0 dB (defaults to 89.0)
                     //  alias mymp3gain = 'mp3gain -c -p -r -d 2.0'
                     #endregion
-                    pp.StartInfo.Arguments = "/r /d " + db + " /k /c " + file;
-                    pp.Start();
+                   // pp.StartInfo.Arguments = "/r /d " + db + " /k /c " + file;
+                   // pp.Start();
+                    Process p = Process.Start("mp3Gain.exe", "/r /d " + db + " /k /c " + file);   //copy exe in Project folder and run it like in convert method
                     pp.WaitForExit();
                 }
             }   
