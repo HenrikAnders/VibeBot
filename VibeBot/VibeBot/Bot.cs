@@ -65,15 +65,16 @@ namespace VibeBot
             //SendKeys.Send("");      // run converting     
             //killProcess("Mp3Converter");
             #endregion
-
-            //other...   
-
+            
             foreach (var file in Directory.GetFiles(path).ToList())
             {
                 if (file.Contains(".flag") || file.Contains(".wav"))
                 {
-                    ProcessStartInfo psi = new ProcessStartInfo();         
-                    Process p = Process.Start("lame.exe", "-b 32 --resample 22.05 -m m \"" + file + "\" \"" + file.Replace(".wav", ".mp3") + "\"");
+                    Process p = new Process();
+                    p.StartInfo.FileName = "lame.exe";
+                    p.StartInfo.Arguments = "-b 32 --resample 22.05 -m m \"" + file + "\" \"" + file.Replace(".wav", ".mp3") + "\"";
+                    p.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                    p.Start();
                     p.WaitForExit();
                     File.Delete(file);
                 }
@@ -85,15 +86,12 @@ namespace VibeBot
         /// set the amplitude to 95db
         /// </summary>
         public async void normazize(double db)
-        {      
-            db=(db == 0) ? db  :  6.0;    // if (bd==0)  db0=6.0 else {db=db}
+        {      //http://pclosmag.com/html/Issues/201304/page11.html
+            db =(db == 0) ? db  :  6.0;    // if (bd==0)  db0=6.0 else {db=db}
             foreach (string file in Directory.GetFiles(path))
             {
                 if ( file.Contains(".mp3"))
                 {
-                    Process pp = new Process();          
-                 //   pp.StartInfo.FileName = @"D:\Programme\Download\Mp3Gain\Mp3Gain.exe";    
-                 //   pp.StartInfo.FileName = AssemblyName.GetAssemblyName("").ToString();      
                     #region param description
                     // -c : ignore clipping
                     //-p  : preserve file modification time
@@ -101,10 +99,13 @@ namespace VibeBot
                     // -d 2.0: makes it 91.0 dB (defaults to 89.0)
                     //  alias mymp3gain = 'mp3gain -c -p -r -d 2.0'
                     #endregion
-                   // pp.StartInfo.Arguments = "/r /d " + db + " /k /c " + file;
-                   // pp.Start();
-                    Process p = Process.Start("mp3Gain.exe", "/r /d " + db + " /k /c " + file);   //copy exe in Project folder and run it like in convert method
-                    pp.WaitForExit();
+                    Process p =new Process();
+                    p.StartInfo.FileName = "mp3gain.exe";       
+                    p.StartInfo.Arguments = "-d 6 -r " + file; // /Q for quiet mode, but no Normalizing     always do space between "" and file
+                  //  p.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                    // Process p =  Process.Start("mp3gain.exe", "-d 6 -r " + file); hat funktioniert aber nicht versteckt
+                    p.Start();
+                    p.WaitForExit();
                 }
             }   
             await Task.Delay(1);

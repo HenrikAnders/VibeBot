@@ -128,6 +128,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <EmbeddedResource Include="Recources\Lame3.99.5_64\lame_enc.dll" />
+    <Content Include="mp3gain.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Recources\lame_enc.dll" />
     <None Include="Recources\load.gif" />
   </ItemGroup>

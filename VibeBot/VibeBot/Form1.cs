@@ -15,6 +15,7 @@ namespace VibeBot
             tbStatus.Visible = false;
             load.Visible = false;
             tbPath.Text = getPath();
+            tbdB.Text = "6";
         }
 
         private void Path_Click(object sender, EventArgs e)
@@ -34,7 +35,7 @@ namespace VibeBot
             load.Visible = true;
             await Task.Run(() => bot.convert());         
 
-           //tbStatus.AppendText("Normalize\r\n");
+            tbStatus.AppendText("Normalizing\r\n");
             await Task.Run(()=> bot.normazize(float.Parse(tbdB.Text, CultureInfo.InvariantCulture.NumberFormat)));
 
             tbStatus.AppendText("Tagging");
