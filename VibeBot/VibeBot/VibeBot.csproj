@@ -118,6 +118,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="FodyWeavers.xml" />
+    <Content Include="Recources\Complete.jpg" />
     <None Include="Recources\Background.jpg" />
     <EmbeddedResource Include="lame.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

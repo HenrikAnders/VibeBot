@@ -4,6 +4,8 @@ using MetroFramework.Forms;
 using Microsoft.Win32;
 using System.Linq;
 using System.Globalization;
+using MetroFramework;
+using System.IO;
 
 namespace VibeBot
 {
@@ -16,6 +18,7 @@ namespace VibeBot
             load.Visible = false;
             tbPath.Text = getPath();
             tbdB.Text = "6";
+            picComplete.Visible = false;
         }
 
         private void Path_Click(object sender, EventArgs e)
@@ -25,6 +28,7 @@ namespace VibeBot
 
         private async void bRun_Click_1(object sender, EventArgs e)
         {
+            picComplete.Visible = false;
             bool isChecked= cbDelete.Checked;
             String path = tbPath.Text;
 
@@ -41,8 +45,9 @@ namespace VibeBot
            // tbStatus.AppendText("tagging");
             await Task.Run(() => bot.tagging());
 
-
+            tbStatus.ForeColor = System.Drawing.Color.Blue;
             load.Visible = false;
+            picComplete.Visible = true;
             await Task.Delay(1);
         }
 
@@ -61,11 +66,15 @@ namespace VibeBot
             else
             {
                 try
-                {
-                    //create the key
-                    reg = Registry.CurrentUser;
-                    regPath = tbPath.Text;
-                    reg.SetValue("VibeBotPath", tbPath.Text);
+                {     if (!string.IsNullOrEmpty(this.tbPath.Text) && Directory.Exists(this.tbPath.Text) && !Directory.GetAccessControl(this.tbPath.Text).AreAccessRulesProtected) {
+                        //create the key
+                        reg = Registry.CurrentUser;
+                        regPath = tbPath.Text;
+                        reg.SetValue("VibeBotPath", tbPath.Text);
+                    }
+                    else {
+                        MetroMessageBox.Show(ActiveForm,"Access to the given path is denied","");
+                    }
                 }
                 catch { }
                 finally
@@ -88,18 +97,22 @@ namespace VibeBot
 
         private void tbDBTextChanged(object sender, EventArgs e)
         {
-            lLevel.ForeColor = System.Drawing.Color.Black;   
-                try
-                {
-                    double level = float.Parse(tbdB.Text, CultureInfo.InvariantCulture.NumberFormat) + 89;
-                    lLevel.Text = "Output level -> " + level + " dB";
-                }
-                catch (Exception)
-                {
-                    lLevel.ForeColor = System.Drawing.Color.Red;
-                    lLevel.Text = "!Invalid input!";
-                }
-            
+            lLevel.ForeColor = System.Drawing.Color.Black;
+            try
+            {
+                double level = float.Parse(tbdB.Text, CultureInfo.InvariantCulture.NumberFormat) + 89;
+                lLevel.Text = "Output level -> " + level + " dB";
+            }
+            catch (Exception)
+            {
+                lLevel.ForeColor = System.Drawing.Color.Red;
+                lLevel.Text = "!Invalid input!";
+            }
+        }  
+
+        private void tbPathTextChanged(object sender, EventArgs e)
+        {
+            bRun.Enabled= !string.IsNullOrEmpty(this.tbPath.Text) && Directory.Exists(this.tbPath.Text) && !Directory.GetAccessControl(this.tbPath.Text).AreAccessRulesProtected;
         }
     }
 }
