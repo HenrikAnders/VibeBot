@@ -52,29 +52,38 @@ namespace VibeBot
         /// </summary>
         public async void normazize(float db)
         {      //http://pclosmag.com/html/Issues/201304/page11.html     
+
             if (found)
                 foreach (string file in Directory.GetFiles(path))
                 {
                     if (file.Contains(".mp3"))
                     {
-                        #region param description
-                        // -c : ignore clipping
-                        //-p  : preserve file modification time
-                        // -r : apply Track gain
-                        // -d 2.0: makes it 91.0 dB (defaults to 89.0)
-                        //  alias mymp3gain = 'mp3gain -c -p -r -d 2.0'
-                        #endregion
-                        Process p = new Process();
-                        p.StartInfo.FileName = "mp3gain.exe";
-                        p.StartInfo.Arguments = "-d " + db + " -r " + file;
-                        p.StartInfo.CreateNoWindow = true;
-                        // /Q for quiet mode, but no Normalizing     always do space between "" and file
-                        //  p.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-                        // Process p =  Process.Start("mp3gain.exe", "-d 6 -r " + file); hat funktioniert aber nicht versteckt
-                        p.Start();
-                        p.WaitForExit();
+                        try
+                        {
+                            #region param description
+                            // -c : ignore clipping
+                            //-p  : preserve file modification time
+                            // -r : apply Track gain
+                            // -d 2.0: makes it 91.0 dB (defaults to 89.0)
+                            //  alias mymp3gain = 'mp3gain -c -p -r -d 2.0'
+                            #endregion
+                            Process p = new Process();
+                            p.StartInfo.FileName = "mp3gain.exe";
+                            p.StartInfo.Arguments = "-c -d " + db + " -r " + file;
+                            // /Q for quiet mode, but no Normalizing     always do space between "" and file
+                            // p.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                            // Process p =  Process.Start("mp3gain.exe", "-d 6 -r " + file); //hat funktioniert aber nicht versteckt
+                            p.Start();
+                            p.WaitForExit();
+                        }
+                        catch (Exception)
+                        {
+                            MetroMessageBox.Show(Form.ActiveForm, file+" is used in another programm!");
+                        }
                     }
+
                 }
+           
             await Task.Delay(1);
         }
 
