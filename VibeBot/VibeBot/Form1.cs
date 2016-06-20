@@ -12,7 +12,7 @@ namespace VibeBot
         public VibeBot()
         {
             InitializeComponent();
-            tbStatus.Visible = false;
+            tbStatus.Visible = true;  
             load.Visible = false;
             tbPath.Text = getPath();
             tbdB.Text = "6";
@@ -25,23 +25,23 @@ namespace VibeBot
 
         private async void bRun_Click_1(object sender, EventArgs e)
         {
+            bool isChecked= cbDelete.Checked;
             String path = tbPath.Text;
 
-            tbStatus.AppendText("Status: \r\n");
-            Bot bot = new Bot(getPath()); 
-            tbStatus.Visible = true;
-                                                       
-            tbStatus.AppendText("Converting\r\n");
+           // tbStatus.AppendText("Status: \r\n");
+            Bot bot = new Bot(getPath());   
+
+          //  tbStatus.AppendText("Converting from wave to mp3 \r\n");
             load.Visible = true;
-            await Task.Run(() => bot.convert());         
+            await Task.Run(() => bot.convert(isChecked));
+              
+         //   tbStatus.AppendText("normalizing and \r\n");
+            await Task.Run(() => bot.normazize(float.Parse(tbdB.Text, CultureInfo.InvariantCulture.NumberFormat)));
 
-            tbStatus.AppendText("Normalizing\r\n");
-            await Task.Run(()=> bot.normazize(float.Parse(tbdB.Text, CultureInfo.InvariantCulture.NumberFormat)));
+           // tbStatus.AppendText("tagging");
+            await Task.Run(() => bot.tagging());
 
-            tbStatus.AppendText("Tagging");
-            await Task.Run(()=> bot.tagging());
 
-                                     
             load.Visible = false;
             await Task.Delay(1);
         }
@@ -84,6 +84,22 @@ namespace VibeBot
         private void VibeBot_Load(object sender, EventArgs e)
         {
             String db = tbdB.Text;
+        }
+
+        private void tbDBTextChanged(object sender, EventArgs e)
+        {
+            lLevel.ForeColor = System.Drawing.Color.Black;   
+                try
+                {
+                    double level = float.Parse(tbdB.Text, CultureInfo.InvariantCulture.NumberFormat) + 89;
+                    lLevel.Text = "Output level -> " + level + " dB";
+                }
+                catch (Exception)
+                {
+                    lLevel.ForeColor = System.Drawing.Color.Red;
+                    lLevel.Text = "!Invalid input!";
+                }
+            
         }
     }
 }
