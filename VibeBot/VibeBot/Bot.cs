@@ -88,7 +88,6 @@ namespace VibeBot
                 {
                     if (file.Contains(".mp3"))
                     {
-                        ;
                         TagLib.File filetoTag = TagLib.File.Create(file);
                         String fileName = Path.GetFileNameWithoutExtension(file);
                         filetoTag.Tag.Title = fileName.Substring(fileName.IndexOf("-") + 2);
