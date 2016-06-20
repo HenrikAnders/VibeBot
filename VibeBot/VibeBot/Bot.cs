@@ -60,16 +60,17 @@ namespace VibeBot
                     {
                         try
                         {
+                            //https://wiki.ubuntuusers.de/MP3Gain/
                             #region param description
                             // -c : ignore clipping
                             //-p  : preserve file modification time
-                            // -r : apply Track gain
+                            // -r : apply Track gain of 89 db (default)
                             // -d 2.0: makes it 91.0 dB (defaults to 89.0)
                             //  alias mymp3gain = 'mp3gain -c -p -r -d 2.0'
                             #endregion
                             Process p = new Process();
                             p.StartInfo.FileName = "mp3gain.exe";
-                            p.StartInfo.Arguments = "-c -d " + db + " -r " + file;
+                            p.StartInfo.Arguments = " /c /r /d " + db+" " + file;
                             // /Q for quiet mode, but no Normalizing     always do space between "" and file
                             // p.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
                             // Process p =  Process.Start("mp3gain.exe", "-d 6 -r " + file); //hat funktioniert aber nicht versteckt
