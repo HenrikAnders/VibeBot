@@ -52,14 +52,15 @@ namespace VibeBot
             // 
             // tbPath
             // 
+            this.tbPath.BackColor = System.Drawing.Color.White;
             // 
             // 
             // 
             this.tbPath.CustomButton.Image = null;
-            this.tbPath.CustomButton.Location = new System.Drawing.Point(309, 2);
+            this.tbPath.CustomButton.Location = new System.Drawing.Point(232, 2);
             this.tbPath.CustomButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tbPath.CustomButton.Name = "";
-            this.tbPath.CustomButton.Size = new System.Drawing.Size(23, 21);
+            this.tbPath.CustomButton.Size = new System.Drawing.Size(17, 17);
             this.tbPath.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
             this.tbPath.CustomButton.TabIndex = 1;
             this.tbPath.CustomButton.Theme = MetroFramework.MetroThemeStyle.Light;
@@ -81,12 +82,12 @@ namespace VibeBot
             this.tbPath.UseSelectable = true;
             this.tbPath.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
             this.tbPath.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
-            this.tbPath.TextChanged += new System.EventHandler(this.tbPathTextChanged);
+            this.tbPath.TextChanged += new System.EventHandler(this.pathTextChanged);
             // 
             // bRun
             // 
             this.bRun.Image = null;
-            this.bRun.Location = new System.Drawing.Point(299, 236);
+            this.bRun.Location = new System.Drawing.Point(288, 236);
             this.bRun.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.bRun.Name = "bRun";
             this.bRun.Size = new System.Drawing.Size(103, 23);
@@ -104,10 +105,10 @@ namespace VibeBot
             // 
             this.tbStatus.CustomButton.FlatAppearance.BorderColor = System.Drawing.Color.MediumBlue;
             this.tbStatus.CustomButton.Image = null;
-            this.tbStatus.CustomButton.Location = new System.Drawing.Point(529, 1);
+            this.tbStatus.CustomButton.Location = new System.Drawing.Point(397, 1);
             this.tbStatus.CustomButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tbStatus.CustomButton.Name = "";
-            this.tbStatus.CustomButton.Size = new System.Drawing.Size(49, 46);
+            this.tbStatus.CustomButton.Size = new System.Drawing.Size(37, 37);
             this.tbStatus.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
             this.tbStatus.CustomButton.TabIndex = 1;
             this.tbStatus.CustomButton.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
@@ -117,8 +118,8 @@ namespace VibeBot
             this.tbStatus.Enabled = false;
             this.tbStatus.ForeColor = System.Drawing.Color.Black;
             this.tbStatus.Lines = new string[] {
-        "   Converting from wave to mp3, normalizing and tagging"};
-            this.tbStatus.Location = new System.Drawing.Point(-5, 273);
+        "   Converting from wav to mp3, normalizing and tagging"};
+            this.tbStatus.Location = new System.Drawing.Point(0, 280);
             this.tbStatus.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tbStatus.MaxLength = 32767;
             this.tbStatus.Name = "tbStatus";
@@ -129,7 +130,7 @@ namespace VibeBot
             this.tbStatus.SelectionStart = 0;
             this.tbStatus.Size = new System.Drawing.Size(435, 39);
             this.tbStatus.TabIndex = 6;
-            this.tbStatus.Text = "   Converting from wave to mp3, normalizing and tagging";
+            this.tbStatus.Text = "   Converting from wav to mp3, normalizing and tagging";
             this.tbStatus.UseSelectable = true;
             this.tbStatus.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
             this.tbStatus.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
@@ -140,10 +141,10 @@ namespace VibeBot
             // 
             // 
             this.tbdB.CustomButton.Image = null;
-            this.tbdB.CustomButton.Location = new System.Drawing.Point(15, 1);
+            this.tbdB.CustomButton.Location = new System.Drawing.Point(11, 1);
             this.tbdB.CustomButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tbdB.CustomButton.Name = "";
-            this.tbdB.CustomButton.Size = new System.Drawing.Size(25, 23);
+            this.tbdB.CustomButton.Size = new System.Drawing.Size(19, 19);
             this.tbdB.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
             this.tbdB.CustomButton.TabIndex = 1;
             this.tbdB.CustomButton.Theme = MetroFramework.MetroThemeStyle.Light;
@@ -203,10 +204,10 @@ namespace VibeBot
             this.load.ErrorImage = global::VibeBot.Properties.Resources.load;
             this.load.ImageLocation = "D:\\Visual Studio\\Repo\\VibeBot\\VibeBot\\Recources\\load.gif";
             this.load.InitialImage = ((System.Drawing.Image)(resources.GetObject("load.InitialImage")));
-            this.load.Location = new System.Drawing.Point(160, 22);
+            this.load.Location = new System.Drawing.Point(348, 45);
             this.load.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.load.Name = "load";
-            this.load.Size = new System.Drawing.Size(40, 34);
+            this.load.Size = new System.Drawing.Size(33, 28);
             this.load.TabIndex = 5;
             this.load.TabStop = false;
             // 
@@ -252,7 +253,7 @@ namespace VibeBot
             // picComplete
             // 
             this.picComplete.Image = global::VibeBot.Properties.Resources.Complete;
-            this.picComplete.Location = new System.Drawing.Point(-3, -2);
+            this.picComplete.Location = new System.Drawing.Point(-5, 0);
             this.picComplete.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.picComplete.Name = "picComplete";
             this.picComplete.Size = new System.Drawing.Size(433, 10);
@@ -267,6 +268,7 @@ namespace VibeBot
             this.BackgroundImage = global::VibeBot.Properties.Resources.Background;
             this.BackImage = global::VibeBot.Properties.Resources.Background;
             this.ClientSize = new System.Drawing.Size(424, 300);
+            this.Controls.Add(this.load);
             this.Controls.Add(this.picComplete);
             this.Controls.Add(this.lLevel);
             this.Controls.Add(this.pictureBox);
@@ -276,7 +278,6 @@ namespace VibeBot
             this.Controls.Add(this.lPath);
             this.Controls.Add(this.tbdB);
             this.Controls.Add(this.tbStatus);
-            this.Controls.Add(this.load);
             this.Controls.Add(this.bRun);
             this.Controls.Add(this.tbPath);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -286,7 +287,6 @@ namespace VibeBot
             this.Name = "VibeBot";
             this.Padding = new System.Windows.Forms.Padding(20, 74, 20, 20);
             this.Text = "VibeBot";
-            this.Load += new System.EventHandler(this.VibeBot_Load);
             ((System.ComponentModel.ISupportInitialize)(this.load)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picComplete)).EndInit();

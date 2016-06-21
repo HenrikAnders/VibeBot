@@ -19,6 +19,7 @@ namespace VibeBot
             tbPath.Text = getPath();
             tbdB.Text = "6";
             picComplete.Visible = false;
+            this.MaximizeBox = false;
         }
 
         private void Path_Click(object sender, EventArgs e)
@@ -28,27 +29,41 @@ namespace VibeBot
 
         private async void bRun_Click_1(object sender, EventArgs e)
         {
-            picComplete.Visible = false;
-            bool isChecked = cbDelete.Checked;
-            String path = tbPath.Text;
+            if (Directory.GetFiles(setPath(), "*.wav").Length == 0 && Directory.GetFiles(setPath(), "*.mp3").Length == 0)
+            {
+                MetroMessageBox.Show(this, "No files found on the given path!     Make sure that there are wave or mp3 files!", "");
+            }
+            else
+            {
+                tbdB.Enabled = false;
+                tbPath.Enabled = false;
+                cbDelete.Enabled = false;
+                picComplete.Visible = false;
+                bool isChecked = cbDelete.Checked;
+                String path = tbPath.Text;
 
-            // tbStatus.AppendText("Status: \r\n");
-            Bot bot = new Bot(setPath());
+                // tbStatus.AppendText("Status: \r\n");
+                Bot bot = new Bot(setPath());
 
-            //  tbStatus.AppendText("Converting from wave to mp3 \r\n");
-            load.Visible = true;
-            await Task.Run(() => bot.convert(isChecked));
+                //  tbStatus.AppendText("Converting from wave to mp3 \r\n");
+                load.Visible = true;
+                await Task.Run(() => bot.convert(isChecked));
 
-            //   tbStatus.AppendText("normalizing and \r\n");
-            await Task.Run(() => bot.normazize(float.Parse(tbdB.Text, CultureInfo.InvariantCulture.NumberFormat)));
+                //   tbStatus.AppendText("normalizing and \r\n");
+                await Task.Run(() => bot.normazize(float.Parse(tbdB.Text, CultureInfo.InvariantCulture.NumberFormat)));
 
-            // tbStatus.AppendText("tagging");
-            await Task.Run(() => bot.tagging());
+                // tbStatus.AppendText("tagging");
+                await Task.Run(() => bot.tagging());
 
-            tbStatus.ForeColor = System.Drawing.Color.Blue;
-            load.Visible = false;
-            picComplete.Visible = true;
-            await Task.Delay(1);
+                tbStatus.ForeColor = System.Drawing.Color.Blue;
+                load.Visible = false;
+                picComplete.Visible = true;
+                await Task.Delay(1);
+
+                tbdB.Enabled = true;
+                tbPath.Enabled = true;
+                cbDelete.Enabled = true;
+            }
         }
 
         /// <summary>
@@ -65,32 +80,7 @@ namespace VibeBot
             }
             return regPath;
         }
-
-        private void VibeBot_Load(object sender, EventArgs e)
-        {
-            String db = tbdB.Text;
-        }
-
-        private void tbDBTextChanged(object sender, EventArgs e)
-        {
-            lLevel.ForeColor = System.Drawing.Color.Black;
-            try
-            {
-                double level = float.Parse(tbdB.Text, CultureInfo.InvariantCulture.NumberFormat) + 89;
-                lLevel.Text = "Output level -> " + level + " dB";
-            }
-            catch (Exception)
-            {
-                lLevel.ForeColor = System.Drawing.Color.Red;
-                lLevel.Text = "!Invalid input!";
-            }
-        }
-
-        private void tbPathTextChanged(object sender, EventArgs e)
-        {
-            bRun.Enabled = !string.IsNullOrEmpty(this.tbPath.Text) && Directory.Exists(this.tbPath.Text) && !Directory.GetAccessControl(this.tbPath.Text).AreAccessRulesProtected;
-        }
-
+       
         /// <summary>
         /// get path from textbox if registry is empty
         /// </summary>
@@ -108,7 +98,8 @@ namespace VibeBot
                     regPath = tbPath.Text;
                     reg.SetValue("VibeBotPath", tbPath.Text);
                 }
-                else {
+                else
+                {
                     MetroMessageBox.Show(ActiveForm, "Access to the given path is denied", "");
                 }
             }
@@ -122,6 +113,41 @@ namespace VibeBot
                 }
             }
             return regPath;
+        }
+
+        /// <summary>
+        /// validate user input, used to set the button bRun.Enable = true/false
+        /// </summary>
+        /// <returns></returns>
+        private bool validate()
+        {
+            bool bPath= !string.IsNullOrEmpty(this.tbPath.Text) && Directory.Exists(this.tbPath.Text) && !Directory.GetAccessControl(this.tbPath.Text).AreAccessRulesProtected  ;
+            bool bDB= !lLevel.Text.Equals("!Invalid input!");
+            tbPath.ForeColor = (bPath) ? System.Drawing.Color.Red : System.Drawing.Color.Red;
+            return bPath && bDB;
+        }
+
+        private void pathTextChanged(object sender, EventArgs e)
+        {
+            picComplete.Visible = false;
+            bRun.Enabled = validate();
+        }
+
+        private void tbDBTextChanged(object sender, EventArgs e)
+        {
+            picComplete.Visible = false;
+            lLevel.ForeColor = System.Drawing.Color.Black;
+            try
+            {     //if it´s not a number show "Invalid input"
+                double level = float.Parse(tbdB.Text, CultureInfo.InvariantCulture.NumberFormat) + 89;
+                lLevel.Text = "Output level -> " + level + " dB";         
+            }
+            catch (Exception)
+            {
+                lLevel.ForeColor = System.Drawing.Color.Red;
+                lLevel.Text = "!Invalid input!";
+            }
+            bRun.Enabled = validate();
         }
     }
 }
