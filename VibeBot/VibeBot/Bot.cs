@@ -70,7 +70,7 @@ namespace VibeBot
                             #endregion
                             Process p = new Process();
                             p.StartInfo.FileName = "mp3gain.exe";
-                            p.StartInfo.Arguments = " /c /r /d " + db+" " + file;
+                            p.StartInfo.Arguments = " /c /d " + db+" /r \"" + file;
                             // /Q for quiet mode, but no Normalizing     always do space between "" and file
                             // p.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
                             // Process p =  Process.Start("mp3gain.exe", "-d 6 -r " + file); //hat funktioniert aber nicht versteckt
