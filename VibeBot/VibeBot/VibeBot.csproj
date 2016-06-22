@@ -49,6 +49,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Recources\icon.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="MetroFramework">
       <HintPath>lib\MetroFramework.dll</HintPath>
@@ -118,6 +121,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="FodyWeavers.xml" />
+    <Content Include="icon.ico" />
     <Content Include="Recources\Complete.jpg" />
     <None Include="Recources\icon.ico" />
     <None Include="Recources\Background.jpg" />
