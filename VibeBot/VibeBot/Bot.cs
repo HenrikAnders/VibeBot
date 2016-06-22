@@ -67,7 +67,7 @@ namespace VibeBot
                             Process p = new Process();
                             p.StartInfo.FileName = "mp3gain.exe";
                             p.StartInfo.Arguments = " /c /d " + db+" /r \"" + file;
-                            //p.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;        
+                            p.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;        
                             p.Start();
                             p.WaitForExit();
                         }
