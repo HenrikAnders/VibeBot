@@ -18,16 +18,19 @@ namespace VibeBot
         {
             this.path = path;  
         }
-     
+
         /// <summary>
         /// use lame to convert from wave to mp3
         /// </summary>
         public async void convert(bool deleteFile)
-        {     
-                foreach (var file in Directory.GetFiles(path).ToList())
+        {
+            foreach (var file in Directory.GetFiles(path).ToList())
+            {
+                try
                 {
+
                     if (file.Contains(".wav"))
-                    {              
+                    {
                         Process p = new Process();
                         p.StartInfo.FileName = "lame.exe";
                         p.StartInfo.Arguments = "-b 32 --resample 22.05 -m m \"" + file + "\" \"" + file.Replace(".wav", ".mp3") + "\"";
@@ -38,8 +41,14 @@ namespace VibeBot
                         {
                             File.Delete(file);
                         }
+
                     }
                 }
+                catch
+                {
+                    MetroMessageBox.Show(Form.ActiveForm, file + " is used in another programm, or is not a .wav file", "Convert Error");
+                }
+            }
             await Task.Delay(1);
         }
 
@@ -73,12 +82,10 @@ namespace VibeBot
                         }
                         catch (Exception)
                         {
-                            MetroMessageBox.Show(Form.ActiveForm, file+" is used in another programm!");
+                            MetroMessageBox.Show(Form.ActiveForm, file+" is used in another programm!","Normalizing Error");
                         }
                     }
-
                 }
-           
             await Task.Delay(1);
         }
 
@@ -103,7 +110,7 @@ namespace VibeBot
                     }
                     catch
                     {
-                        MetroMessageBox.Show(Form.ActiveForm, "Unknow file format of file: " + file);
+                        MetroMessageBox.Show(Form.ActiveForm, file+"\r\nFile format must be like: artist - title ", "Tagging Error");
                     }
                 }
             await Task.Delay(1);

@@ -41,19 +41,19 @@ namespace VibeBot
                 picComplete.Visible = false;
                 bool isChecked = cbDelete.Checked;
                 String path = tbPath.Text;
+                tbStatus.Text = "";
 
-                // tbStatus.AppendText("Status: \r\n");
                 Bot bot = new Bot(setPath());
-
-                //  tbStatus.AppendText("Converting from wave to mp3 \r\n");
+                
                 load.Visible = true;
                 await Task.Run(() => bot.convert(isChecked));
-
-                //   tbStatus.AppendText("normalizing and \r\n");
+                tbStatus.AppendText("Converted, ");
+                
                 await Task.Run(() => bot.normazize(float.Parse(tbdB.Text, CultureInfo.InvariantCulture.NumberFormat)));
-
-                // tbStatus.AppendText("tagging");
+                tbStatus.AppendText("normalized ");
+                
                 await Task.Run(() => bot.tagging());
+                tbStatus.AppendText("and tagged");
 
                 tbStatus.ForeColor = System.Drawing.Color.Blue;
                 load.Visible = false;
