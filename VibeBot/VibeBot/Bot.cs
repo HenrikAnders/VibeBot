@@ -56,7 +56,8 @@ namespace VibeBot
         /// set the amplitude to given value
         /// </summary>
         public async void normazize(float db)
-        {   
+        {
+            if (db != 0)
                 foreach (string file in Directory.GetFiles(path))
                 {
                     if (file.Contains(".mp3"))
@@ -75,14 +76,14 @@ namespace VibeBot
                             #endregion
                             Process p = new Process();
                             p.StartInfo.FileName = "mp3gain.exe";
-                            p.StartInfo.Arguments = " /c /d " + db+" /r \"" + file;
-                            p.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;        
+                            p.StartInfo.Arguments = " /c /d " + db + " /r \"" + file;
+                            p.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
                             p.Start();
                             p.WaitForExit();
                         }
                         catch (Exception)
                         {
-                            MetroMessageBox.Show(Form.ActiveForm, file+" is used in another programm!","Normalizing Error");
+                            MetroMessageBox.Show(Form.ActiveForm, file + " is used in another programm!", "Normalizing Error");
                         }
                     }
                 }
