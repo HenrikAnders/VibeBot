@@ -33,7 +33,7 @@ namespace VibeBot
                     {
                         Process p = new Process();
                         p.StartInfo.FileName = "lame.exe";
-                        p.StartInfo.Arguments = "-b 32 --resample 22.05 -m m \"" + file + "\" \"" + file.Replace(".wav", ".mp3") + "\"";
+                        p.StartInfo.Arguments = "-b 320 --resample 44.1 -m m \"" + file + "\" \"" + file.Replace(".wav", ".mp3") + "\"";
                         p.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
                         p.Start();
                         p.WaitForExit();
@@ -95,13 +95,13 @@ namespace VibeBot
         public async void tagging()
         {          
                 foreach (var file in Directory.GetFiles(path))
-                {
-                    try
+            {
+                String fileName = Path.GetFileNameWithoutExtension(file);
+                try
                     {
                         if (file.Contains(".mp3"))
                         {
                             TagLib.File filetoTag = TagLib.File.Create(file);
-                            String fileName = Path.GetFileNameWithoutExtension(file);
                             filetoTag.Tag.Title = fileName.Substring(fileName.IndexOf("-") + 2);
                             filetoTag.Tag.Performers = null;
                             filetoTag.Tag.Performers = new[] { fileName.Substring(0, fileName.IndexOf("-") - 1) };
@@ -110,7 +110,7 @@ namespace VibeBot
                     }
                     catch
                     {
-                        MetroMessageBox.Show(Form.ActiveForm, file+"\r\nFile format must be like: artist - title ", "Tagging Error");
+                        MetroMessageBox.Show(Form.ActiveForm, fileName.Substring(fileName.IndexOf("-") + 1) + "\r\nFile format must be like: artist - title ", "Tagging error");
                     }
                 }
             await Task.Delay(1);

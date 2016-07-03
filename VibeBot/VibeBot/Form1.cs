@@ -14,6 +14,7 @@ namespace VibeBot
         public VibeBot()
         {
             InitializeComponent();
+            TopMost = false; // without the Messageboxes will bi hidden behind the main window
             tbStatus.Visible = true;
             load.Visible = false;
             tbPath.Text = getPath();
