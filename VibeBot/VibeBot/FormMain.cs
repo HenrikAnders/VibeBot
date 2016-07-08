@@ -6,6 +6,7 @@ using System.Linq;
 using System.Globalization;
 using MetroFramework;
 using System.IO;
+using System.Windows.Forms;
 
 namespace VibeBot
 {
@@ -149,6 +150,20 @@ namespace VibeBot
                 lLevel.Text = "!Invalid input!";
             }
             bRun.Enabled = validate();
+        }
+
+        private void folderBrowserClick(object sender, EventArgs e)
+        {
+            picComplete.Visible = false;                      
+            if (folderBrowser.ShowDialog()==DialogResult.OK)
+            {
+                tbPath.Text = folderBrowser.SelectedPath;
+            }
+        }      
+        private void bSettings(object sender, EventArgs e)
+        {
+            FormSettings fSettings = new FormSettings(setPath());    
+            fSettings.Show(this);   
         }
     }
 }
