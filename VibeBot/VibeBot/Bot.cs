@@ -114,22 +114,38 @@ namespace VibeBot
                 if (files.ElementAt(i).Contains(".mp3"))
                 {
                     try
-                    {                                                                      
+                    {
                         Process p = new Process();
                         p.StartInfo.FileName = "mp3gain.exe";
                         p.StartInfo.Arguments = " /s r \"" + files.ElementAt(i);
                         p.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
                         p.StartInfo.UseShellExecute = false;
                         p.StartInfo.RedirectStandardOutput = true;        //allow console reading
-                        p.Start();   
-                        foreach (Match match in rx.Matches("bdB change"))
-                        {
-                            gain = float.Parse(p.StandardOutput.ReadToEnd().Substring(match.Index+1, 9));
-                        }
+                        p.Start();
+                        Console.Write(p.StandardOutput.ReadToEnd().ToList().ElementAt(2));
+
+                        //string output = p.StandardOutput.ReadLine();
+                        //Console.WriteLine(output.Substring(output.IndexOf("C"),9));
+                        //if (String.IsNullOrEmpty(p.StandardOutput.ReadToEnd()))
+                        //{
+                        //    foreach (Match match in rx.Matches(p.StandardOutput.ReadToEnd()))
+                        //    {
+                        //        gain = float.Parse(p.StandardOutput.ReadToEnd().Substring(match.Index + 1, 9));
+                        //    }
+                        //}
                         // gain= float.Parse(p.StandardOutput.ReadToEnd().Substring('3' + 32,9));          
                         p.WaitForExit();
                         TagLib.File fileTag = TagLib.File.Create(files.ElementAt(i));
-                        gainValue.Insert(index,new KeyValuePair<string, float>(fileTag.Tag.Performers[0] + "-" + fileTag.Tag.Title, gain));
+                        try
+                        {
+                            // C: \Users\Henrik\Desktop\Zuglast.mp3   33
+                            //Recommended "Track" dB change: -6.480000
+                            gainValue.Insert(index, new KeyValuePair<string, float>(fileTag.Tag.Performers[0] + "-" + fileTag.Tag.Title, gain));
+                        }
+                        catch
+                        {
+                            //no need to implement
+                        }
                         index++;
                     }
                     catch (Exception e)
