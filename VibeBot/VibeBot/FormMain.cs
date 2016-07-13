@@ -7,25 +7,27 @@ using System.Globalization;
 using MetroFramework;
 using System.IO;
 using System.Windows.Forms;
+using System.Collections.Generic;
 
 namespace VibeBot
 {
     public partial class VibeBot : MetroForm
-    {
+    {                           
         public VibeBot()
         {
             InitializeComponent();
             TopMost = false; // without the Messageboxes will bi hidden behind the main window
             tbStatus.Visible = true;
-            load.Visible = false;
+            pLoad.Visible = false;
             tbPath.Text = getPath();
-            tbdB.Text = "6";
+            tbdB.Text = "6";          
             picComplete.Visible = false;
             this.MaximizeBox = false;
         }
 
         private void Path_Click(object sender, EventArgs e)
         {
+            picComplete.Visible = false;
             tbPath.Text = "";
         }
 
@@ -40,27 +42,24 @@ namespace VibeBot
                 tbdB.Enabled = false;
                 tbPath.Enabled = false;
                 cbDelete.Enabled = false;
-                picComplete.Visible = false;
-                bool isChecked = cbDelete.Checked;
-                String path = tbPath.Text;
+                picComplete.Visible = false;       
                 tbStatus.Text = "";
 
                 Bot bot = new Bot(setPath());
                 
-                load.Visible = true;
-                await Task.Run(() => bot.convert(isChecked));
+                pLoad.Visible = true;
+                await Task.Run(() => bot.convert(cbDelete.Checked));
                 tbStatus.AppendText("Converted, ");
                 
-                await Task.Run(() => bot.normazize(float.Parse(tbdB.Text, CultureInfo.InvariantCulture.NumberFormat)));
+                await Task.Run(() => bot.normazize(float.Parse(tbdB.Text, CultureInfo.InvariantCulture.NumberFormat),cbReset.Checked));
                 tbStatus.AppendText("normalized ");
                 
                 await Task.Run(() => bot.tagging());
                 tbStatus.AppendText("and tagged");
 
                 tbStatus.ForeColor = System.Drawing.Color.Blue;
-                load.Visible = false;
-                picComplete.Visible = true;
-                await Task.Delay(1);
+                pLoad.Visible = false;
+                picComplete.Visible = true;     
 
                 tbdB.Enabled = true;
                 tbPath.Enabled = true;
@@ -94,8 +93,8 @@ namespace VibeBot
             try
             {
                 if (!string.IsNullOrEmpty(this.tbPath.Text) && Directory.Exists(this.tbPath.Text) && !Directory.GetAccessControl(this.tbPath.Text).AreAccessRulesProtected)
-                {
-                    //create the key
+                {   
+                    //create the registry key with value path
                     reg = Registry.CurrentUser;
                     regPath = tbPath.Text;
                     reg.SetValue("VibeBotPath", tbPath.Text);
@@ -142,6 +141,7 @@ namespace VibeBot
             try
             {     //if it´s not a number show "Invalid input"
                 double level = float.Parse(tbdB.Text, CultureInfo.InvariantCulture.NumberFormat) + 89;
+                lLevel.ForeColor = System.Drawing.Color.Gray;
                 lLevel.Text = "Output level -> " + level + " dB";         
             }
             catch (Exception)
@@ -159,11 +159,16 @@ namespace VibeBot
             {
                 tbPath.Text = folderBrowser.SelectedPath;
             }
-        }      
-        private void bSettings(object sender, EventArgs e)
+        }
+        private async void bAnalyze(object sender, EventArgs e)
         {
-            FormSettings fSettings = new FormSettings(setPath());    
-            fSettings.Show(this);   
+            picComplete.Visible = false;       
+            await Task.Run(() =>  new FormAnalyze(setPath()));
+        }   
+        private void cbResetChecked(object sender, EventArgs e)
+        {
+            picComplete.Visible = false;       
+            tbdB.Text = cbReset.Checked ? "0" : "6";
         }
     }
 }

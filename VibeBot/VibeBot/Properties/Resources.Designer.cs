@@ -103,6 +103,16 @@ namespace VibeBot.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap gearBackBlack {
+            get {
+                object obj = ResourceManager.GetObject("gearBackBlack", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap gearmove {
             get {
                 object obj = ResourceManager.GetObject("gearmove", resourceCulture);

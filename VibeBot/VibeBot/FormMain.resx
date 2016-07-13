@@ -121,7 +121,7 @@
     <value>17, 17</value>
   </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="load.InitialImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="pLoad.InitialImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         R0lGODlhHgAeALMPAPr6+vDw8K6urvT09NfX1+Li4pWVlcXFxezs7HZ2dvb29vLy8v39/f7+/v//////
         /yH/C05FVFNDQVBFMi4wAwEAAAAh+QQFBgAPACwAAAAAHgAeAAAE/9DJSau9GDeQu14B0HgZI0rMsiij

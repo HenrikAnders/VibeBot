@@ -133,6 +133,7 @@
     <Content Include="icon.ico" />
     <Content Include="Recources\Complete.jpg" />
     <Content Include="Recources\gear.jpg" />
+    <None Include="Recources\gearBackBlack.JPG" />
     <Content Include="Recources\gearMove.gif" />
     <None Include="Recources\gearBack.jpg" />
     <None Include="Recources\icon.ico" />
