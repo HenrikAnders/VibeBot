@@ -14,7 +14,7 @@ namespace VibeBot
         //features for audio editing: http://mpg123.de/features.shtml
 
 
-        private String path = "";  
+        private String path = "";
         public Bot(String path)
         {
             this.path = path;
@@ -39,7 +39,8 @@ namespace VibeBot
                     {
                         Process p = new Process();
                         p.StartInfo.FileName = "lame.exe";
-                        p.StartInfo.Arguments = "-b 320 --resample 44.1 -m m \"" + file + "\" \"" + file.Replace(".wav", ".mp3") + "\"";
+                        //-b 320 kbits  samplerate 44100 -m s => Stereo  
+                        p.StartInfo.Arguments = " -b 320 --resample 44.1 -m s \"" + file + "\" \"" + file.Replace(".wav", ".mp3") + "\"";
                         p.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
                         p.Start();
                         p.WaitForExit();
@@ -47,7 +48,6 @@ namespace VibeBot
                         {
                             File.Delete(file);
                         }
-
                     }
                 }
                 catch
@@ -119,89 +119,97 @@ namespace VibeBot
         /// </summary>
         /// <param name="path"></param>
         /// <returns>2D Array first dimension File Name, second dimension gain</returns>
-        public async Task<List<KeyValuePair<String, float>>> analyze(String path,bool reanalyze)
+        public async Task<List<KeyValuePair<String, float>>> analyze(String path, bool reanalyze)
         {
             List<string> files = getFiles();
+
             float gain = 0;
             int index = 0; List<KeyValuePair<String, float>> gainValue = new List<KeyValuePair<String, float>>();
-            //get list of analyzed files    
-            string tempFile = Path.GetTempPath() + "analyzedGain.tmp";   
-            if (reanalyze)
-            {   //if reanalyze equals true, the existing .tmp file would be cleaned up 
-                File.WriteAllText(tempFile, String.Empty);
-            }
-            if (File.Exists(tempFile) && new FileInfo(tempFile).Length!=0 && reanalyze==false)
-            {
-                string line = "";
-                using (StreamReader streamFile = new StreamReader(tempFile))
+            if (getFiles().Contains(".mp3"))
+
+            {//get list of analyzed files    
+                string tempFile = Path.GetTempPath() + "analyzedGain.tmp";
+                if (reanalyze)
+                {   //if reanalyze equals true, the existing .tmp file would be cleaned up 
+                    File.WriteAllText(tempFile, String.Empty);
+                }
+                if (File.Exists(tempFile) && new FileInfo(tempFile).Length != 0 && reanalyze == false)
                 {
-                    while ((line = streamFile.ReadLine()) != null)
+                    string line = "";
+                    using (StreamReader streamFile = new StreamReader(tempFile))
                     {
-                        gainValue.Insert(index, new KeyValuePair<String, float>(line.Substring(0,line.IndexOf('#')-1), float.Parse(line.Substring(line.IndexOf('#')+1))));
-                        index++;
+                        while ((line = streamFile.ReadLine()) != null)
+                        {
+                            gainValue.Insert(index, new KeyValuePair<String, float>(line.Substring(0, line.IndexOf('#') - 1), float.Parse(line.Substring(line.IndexOf('#') + 1))));
+                            index++;
+                        }
+                    }
+                }
+                else
+                {
+                    using (StreamWriter streamFile = new StreamWriter(tempFile))
+                    {
+                        //   File.Create(tempFile);
+                        string track = "";
+                        for (int i = 0; i < files.Count; i++)
+                        {
+                            if (files.ElementAt(i).Contains(".mp3"))
+                            {
+                                try
+                                {
+                                    Process p = new Process();
+                                    p.StartInfo.FileName = "mp3gain.exe";
+                                    p.StartInfo.Arguments = "/q /s r \"" + files.ElementAt(i);    //  /q  quiet mode  \s r  force recalculation   
+                                    p.StartInfo.CreateNoWindow = true;
+                                    p.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                                    p.StartInfo.UseShellExecute = false;
+                                    p.StartInfo.RedirectStandardOutput = true;        //allow console reading
+                                    p.Start();
+                                    string outputLine;
+                                    while ((outputLine = p.StandardOutput.ReadLine()) != null)
+                                    {    //search inside+ the console output from running process
+                                        if (outputLine.Contains("dB change:"))
+                                        {    //write captured data into variable
+                                            gain = float.Parse(outputLine.Substring(32));
+                                            break;
+                                        }
+                                    }
+                                    p.WaitForExit();
+                                    TagLib.File fileTag = TagLib.File.Create(files.ElementAt(i));
+                                    try
+                                    {            //write file into keyvalue list
+                                        track = fileTag.Tag.Performers[0] + "-" + fileTag.Tag.Title;
+                                        gainValue.Insert(index, new KeyValuePair<string, float>(track, gain));
+                                    }
+                                    catch
+                                    {
+                                        //no need to implement
+                                    }
+                                    index++;
+                                }
+                                catch (Exception e)
+                                {
+                                    Console.WriteLine(e);
+                                    MetroMessageBox.Show(Form.ActiveForm, files.ElementAt(i) + " is used in another programm!", "Analyze Error");
+                                }
+                                try
+                                {
+                                    //write analyzed file into temp file
+                                    streamFile.WriteLine(track + "#" + gain);
+                                }
+                                catch { }
+                            }
+                        }
                     }
                 }
             }
             else
             {
-                using (StreamWriter streamFile = new StreamWriter(tempFile))               
-                {
-                 //   File.Create(tempFile);
-                    string track = "";
-                    for (int i = 0; i < files.Count; i++)
-                    {
-                        if (files.ElementAt(i).Contains(".mp3"))
-                        {
-                            try
-                            {
-                                Process p = new Process();
-                                p.StartInfo.FileName = "mp3gain.exe";
-                                p.StartInfo.Arguments = "/q /s r \"" + files.ElementAt(i);    //\s r  force recalculation    /q  quiet mode
-                                p.StartInfo.CreateNoWindow = true;
-                                p.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-                                p.StartInfo.UseShellExecute = false;
-                                p.StartInfo.RedirectStandardOutput = true;        //allow console reading
-                                p.Start();
-                                string outputLine;
-                                while ((outputLine = p.StandardOutput.ReadLine()) != null)
-                                {    //search inside+ the console output from running process
-                                    if (outputLine.Contains("dB change:"))
-                                    {    //write captured data into variable
-                                        gain = float.Parse(outputLine.Substring(32));
-                                        break;
-                                    }
-                                }
-                                p.WaitForExit();
-                                TagLib.File fileTag = TagLib.File.Create(files.ElementAt(i));
-                                try
-                                {            //write file into keyvalue list
-                                    track = fileTag.Tag.Performers[0] + "-" + fileTag.Tag.Title;
-                                    gainValue.Insert(index, new KeyValuePair<string, float>(track, gain));
-                                }
-                                catch
-                                {
-                                    //no need to implement
-                                }
-                                index++;
-                            }
-                            catch (Exception e)
-                            {
-                                Console.WriteLine(e);
-                                MetroMessageBox.Show(Form.ActiveForm, files.ElementAt(i) + " is used in another programm!", "Analyze Error");
-                            }
-                            try
-                            {
-                                //write analyzed file into temp file
-                                streamFile.WriteLine(track + "#" + gain);
-                            }
-                            catch { }
-                        }
-                    }
-                }
+                gainValue.Insert(0, new KeyValuePair<string, float>("No wave or mp3 files at this path",-87));
             }
             await Task.Delay(1);
             return gainValue;
-        }     
+        }    
 
 
         /// <summary>

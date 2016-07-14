@@ -2,8 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Drawing;
-using System.Threading;
+using System.Drawing;       
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -11,15 +10,16 @@ namespace VibeBot
 {
     public partial class FormAnalyze : MetroForm
     {
-        string path = "";
-        public FormAnalyze(string path)
-        {
-            this.path = path;
-            InitializeComponent();
-            pGearBack.Visible = true;
-            pGearBackBlack.Visible = false;
-            fillGrid(false);   //should wait until method is finished, but constructor can´t be asynch  
-            this.ShowDialog();
+        string path = "";       
+        public  FormAnalyze(string path)
+        {                
+            this.path = path;   
+            InitializeComponent();          
+            pLoad.Visible = true;
+            fillGrid(false);  //should wait until method is finished, but constructor can´t be asynch  
+            ShowDialog();
+            
+
         }
         /// <summary>
         /// fill the dataGridView
@@ -27,8 +27,6 @@ namespace VibeBot
         /// <param name="reanalyze">indicates whether the values have to be recalculated</param>
         private async Task fillGrid(bool reanalyze)
         {
-            pLoad.Visible = true;
-            gridAnalyze.Visible = false;
             DataTable dt = new DataTable();
             dt.Columns.Add("Track");
             dt.Columns.Add("Gain");
@@ -46,28 +44,27 @@ namespace VibeBot
             gridAnalyze.EnableHeadersVisualStyles = false;
             gridAnalyze.RowHeadersVisible = false;
             pLoad.Visible = false;
-            gridAnalyze.Visible = true;
         }
 
         private async void bReanalyze(object sender, EventArgs e)
-        {                      //click Listener
-            Console.Write("drück");
-            await fillGrid(true);
-        }
+        {   //click Listener    
+            //  animation();  //   no function...don´t no why       
+            gridAnalyze.Visible = false;
+            pLoad.Visible = true;      
+            await fillGrid(true);    
+            pLoad.Visible = false;
+            gridAnalyze.Visible = true;
+        }  
 
-        private void bVisualDown(object sender, MouseEventArgs e)
-        {       //mouseButton down listener  
-            pGearBackBlack.Visible = true;
-            pGearBack.SendToBack();
-            tbStatus.SendToBack();
+        private void animation()
+        {   //pictures have to be set      
+            //pGearBack.SendToBack();
+            //tbStatus.SendToBack();
+            //pGearBackBlack.Visible = true;
+            //Thread.Sleep(500);
+            //pGearBackBlack.Visible = false;
+            //pGearBackBlack.SendToBack();
+            //tbStatus.SendToBack();  
         }
-
-        private async void bVisualUp(object sender, MouseEventArgs e)
-        {   //mouseButton up listener 
-            pGearBackBlack.Visible = false;
-            pGearBackBlack.SendToBack();
-            tbStatus.SendToBack();
-            await fillGrid(true);
-        }                                      
     }
 }

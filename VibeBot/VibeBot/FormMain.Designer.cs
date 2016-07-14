@@ -15,7 +15,7 @@ namespace VibeBot
         /// </summary>
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
-        {   if (File.Exists(Path.GetTempPath() + "analyzedGain.tmp"))
+        {   if (File.Exists(Path.GetTempPath() + "analyzedGain.tmp"))   //delete tempfile, before disposing
                 File.Delete(Path.GetTempPath() + "analyzedGain.tmp");
             if (disposing && (components != null))
             {
@@ -51,10 +51,15 @@ namespace VibeBot
             this.cbReset = new System.Windows.Forms.CheckBox();
             this.picComplete = new System.Windows.Forms.PictureBox();
             this.folderBrowser = new System.Windows.Forms.FolderBrowserDialog();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.tbAbout = new System.Windows.Forms.TextBox();
+            this.bDeutsch = new MetroFramework.Controls.MetroTextBox.MetroTextButton();
+            this.bEnglish = new MetroFramework.Controls.MetroTextBox.MetroTextButton();
             ((System.ComponentModel.ISupportInitialize)(this.pLoad)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pGear)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picComplete)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // tbPath
@@ -144,6 +149,7 @@ namespace VibeBot
             this.tbStatus.UseSelectable = true;
             this.tbStatus.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
             this.tbStatus.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
+            this.tbStatus.Click += new System.EventHandler(this.formClick);
             // 
             // tbdB
             // 
@@ -237,6 +243,7 @@ namespace VibeBot
             this.cbDelete.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.tooltip.SetToolTip(this.cbDelete, "when checking, wav files are deleted after converting");
             this.cbDelete.UseVisualStyleBackColor = true;
+            this.cbDelete.Click += new System.EventHandler(this.cbEverwrite);
             // 
             // pictureBox
             // 
@@ -251,6 +258,7 @@ namespace VibeBot
             this.pictureBox.TabIndex = 14;
             this.pictureBox.TabStop = false;
             this.tooltip.SetToolTip(this.pictureBox, "Show analysation");
+            this.pictureBox.Click += new System.EventHandler(this.formClick);
             // 
             // lLevel
             // 
@@ -316,17 +324,71 @@ namespace VibeBot
             this.picComplete.TabIndex = 16;
             this.picComplete.TabStop = false;
             this.picComplete.Visible = false;
+            this.picComplete.Click += new System.EventHandler(this.formClick);
             // 
             // folderBrowser
             // 
             this.folderBrowser.RootFolder = System.Environment.SpecialFolder.MyComputer;
             this.folderBrowser.ShowNewFolderButton = false;
             // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = global::VibeBot.Properties.Resources.questionMark;
+            this.pictureBox1.Location = new System.Drawing.Point(357, 279);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(34, 27);
+            this.pictureBox1.TabIndex = 20;
+            this.pictureBox1.TabStop = false;
+            this.pictureBox1.Click += new System.EventHandler(this.bInfo);
+            // 
+            // tbAbout
+            // 
+            this.tbAbout.ForeColor = System.Drawing.Color.DimGray;
+            this.tbAbout.Location = new System.Drawing.Point(1, 94);
+            this.tbAbout.Multiline = true;
+            this.tbAbout.Name = "tbAbout";
+            this.tbAbout.Size = new System.Drawing.Size(427, 183);
+            this.tbAbout.TabIndex = 21;
+            this.tbAbout.Text = resources.GetString("tbAbout.Text");
+            this.tbAbout.Click += new System.EventHandler(this.tbAboutClick);
+            // 
+            // bDeutsch
+            // 
+            this.bDeutsch.Image = null;
+            this.bDeutsch.Location = new System.Drawing.Point(318, 278);
+            this.bDeutsch.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.bDeutsch.Name = "bDeutsch";
+            this.bDeutsch.Size = new System.Drawing.Size(33, 22);
+            this.bDeutsch.TabIndex = 22;
+            this.bDeutsch.Text = "De";
+            this.bDeutsch.UseSelectable = true;
+            this.bDeutsch.UseVisualStyleBackColor = true;
+            this.bDeutsch.Visible = false;
+            this.bDeutsch.Click += new System.EventHandler(this.bDeuClick);
+            // 
+            // bEnglish
+            // 
+            this.bEnglish.Image = null;
+            this.bEnglish.Location = new System.Drawing.Point(279, 278);
+            this.bEnglish.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.bEnglish.Name = "bEnglish";
+            this.bEnglish.Size = new System.Drawing.Size(33, 22);
+            this.bEnglish.TabIndex = 23;
+            this.bEnglish.Text = "Eng";
+            this.bEnglish.UseSelectable = true;
+            this.bEnglish.UseVisualStyleBackColor = true;
+            this.bEnglish.Visible = false;
+            this.bEnglish.Click += new System.EventHandler(this.bEngClick);
+            // 
             // VibeBot
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(424, 300);
+            this.Controls.Add(this.bEnglish);
+            this.Controls.Add(this.bDeutsch);
+            this.Controls.Add(this.tbAbout);
+            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.cbReset);
             this.Controls.Add(this.pGear);
             this.Controls.Add(this.bSearchPath);
@@ -349,10 +411,12 @@ namespace VibeBot
             this.Name = "VibeBot";
             this.Padding = new System.Windows.Forms.Padding(20, 74, 20, 20);
             this.Text = "VibeBot";
+            this.Click += new System.EventHandler(this.formClick);
             ((System.ComponentModel.ISupportInitialize)(this.pLoad)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pGear)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picComplete)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -376,6 +440,10 @@ namespace VibeBot
         private FolderBrowserDialog folderBrowser;
         private PictureBox pGear;
         private CheckBox cbReset;
+        private PictureBox pictureBox1;
+        private TextBox tbAbout;
+        private MetroFramework.Controls.MetroTextBox.MetroTextButton bDeutsch;
+        private MetroFramework.Controls.MetroTextBox.MetroTextButton bEnglish;
     }
 }
 

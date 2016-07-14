@@ -177,6 +177,19 @@
   <metadata name="folderBrowser.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>123, 25</value>
   </metadata>
+  <data name="tbAbout.Text" xml:space="preserve">
+    <value>About VibeBot
+This program convert stereo wave files to stereo mp3 files. 
+Files are encoded with the samplerate of 44100 Hz (44.1kHz)
+The result are 320kBits/s high quality audio files. The convertetd files
+will be normalized at the given value, without any loss of data.
+After that, track artist and title is written into the metadata.
+This is called tagging. Tagging will only be succsessfully, if the 
+filename is in the required synthax. For example: 
+Dj Reverb - Hydra
+'Dj Reverb' is the artist and 'Hydra' the title, the elements
+are seperated by a hyphen.</value>
+  </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         AAABAAUAEBAAAAEAIABoBAAAVgAAABgYAAABACAAiAkAAL4EAAAgIAAAAQAgAKgQAABGDgAAMDAAAAEA

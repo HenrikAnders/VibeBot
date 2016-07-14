@@ -36,14 +36,11 @@ namespace VibeBot
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.tbStatus = new MetroFramework.Controls.MetroTextBox();
             this.tooltip = new System.Windows.Forms.ToolTip(this.components);
-            this.pGearBack = new System.Windows.Forms.PictureBox();
+            this.bGear = new System.Windows.Forms.Button();
             this.gridAnalyze = new MetroFramework.Controls.MetroGrid();
             this.pLoad = new System.Windows.Forms.PictureBox();
-            this.pGearBackBlack = new System.Windows.Forms.PictureBox();
-            ((System.ComponentModel.ISupportInitialize)(this.pGearBack)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridAnalyze)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pLoad)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pGearBackBlack)).BeginInit();
             this.SuspendLayout();
             // 
             // tbStatus
@@ -54,7 +51,7 @@ namespace VibeBot
             // 
             this.tbStatus.CustomButton.FlatAppearance.BorderColor = System.Drawing.Color.MediumBlue;
             this.tbStatus.CustomButton.Image = null;
-            this.tbStatus.CustomButton.Location = new System.Drawing.Point(393, 1);
+            this.tbStatus.CustomButton.Location = new System.Drawing.Point(404, 1);
             this.tbStatus.CustomButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tbStatus.CustomButton.Name = "";
             this.tbStatus.CustomButton.Size = new System.Drawing.Size(37, 37);
@@ -78,24 +75,30 @@ namespace VibeBot
             this.tbStatus.SelectionLength = 0;
             this.tbStatus.SelectionStart = 0;
             this.tbStatus.ShortcutsEnabled = true;
-            this.tbStatus.Size = new System.Drawing.Size(431, 39);
+            this.tbStatus.Size = new System.Drawing.Size(442, 39);
             this.tbStatus.TabIndex = 7;
             this.tbStatus.Text = "   Analyze track gain";
             this.tbStatus.UseSelectable = true;
             this.tbStatus.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
             this.tbStatus.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
             // 
-            // pGearBack
+            // bGear
             // 
-            this.pGearBack.Image = global::VibeBot.Properties.Resources.gearBack;
-            this.pGearBack.Location = new System.Drawing.Point(285, 136);
-            this.pGearBack.Name = "pGearBack";
-            this.pGearBack.Size = new System.Drawing.Size(139, 164);
-            this.pGearBack.TabIndex = 13;
-            this.pGearBack.TabStop = false;
-            this.tooltip.SetToolTip(this.pGearBack, "Reanalyze files");
-            this.pGearBack.MouseDown += new System.Windows.Forms.MouseEventHandler(this.bVisualDown);
-            this.pGearBack.MouseUp += new System.Windows.Forms.MouseEventHandler(this.bVisualUp);
+            this.bGear.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.bGear.FlatAppearance.BorderColor = System.Drawing.Color.White;
+            this.bGear.FlatAppearance.BorderSize = 0;
+            this.bGear.FlatAppearance.MouseDownBackColor = System.Drawing.Color.White;
+            this.bGear.FlatAppearance.MouseOverBackColor = System.Drawing.Color.White;
+            this.bGear.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.bGear.ForeColor = System.Drawing.Color.White;
+            this.bGear.Image = global::VibeBot.Properties.Resources.gearBack;
+            this.bGear.Location = new System.Drawing.Point(300, 133);
+            this.bGear.Name = "bGear";
+            this.bGear.Size = new System.Drawing.Size(128, 169);
+            this.bGear.TabIndex = 14;
+            this.tooltip.SetToolTip(this.bGear, "Click to reanalyze");
+            this.bGear.UseVisualStyleBackColor = true;
+            this.bGear.Click += new System.EventHandler(this.bReanalyze);
             // 
             // gridAnalyze
             // 
@@ -144,7 +147,7 @@ namespace VibeBot
             this.gridAnalyze.RowTemplate.Height = 24;
             this.gridAnalyze.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.gridAnalyze.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.gridAnalyze.Size = new System.Drawing.Size(279, 200);
+            this.gridAnalyze.Size = new System.Drawing.Size(294, 200);
             this.gridAnalyze.StandardTab = true;
             this.gridAnalyze.Style = MetroFramework.MetroColorStyle.White;
             this.gridAnalyze.TabIndex = 8;
@@ -152,40 +155,35 @@ namespace VibeBot
             // pLoad
             // 
             this.pLoad.Image = global::VibeBot.Properties.Resources.load;
-            this.pLoad.Location = new System.Drawing.Point(46, 83);
+            this.pLoad.Location = new System.Drawing.Point(128, 23);
             this.pLoad.Name = "pLoad";
             this.pLoad.Size = new System.Drawing.Size(33, 32);
             this.pLoad.TabIndex = 9;
             this.pLoad.TabStop = false;
-            // 
-            // pGearBackBlack
-            // 
-            this.pGearBackBlack.Image = global::VibeBot.Properties.Resources.gearBackBlack;
-            this.pGearBackBlack.Location = new System.Drawing.Point(288, 161);
-            this.pGearBackBlack.Name = "pGearBackBlack";
-            this.pGearBackBlack.Size = new System.Drawing.Size(138, 144);
-            this.pGearBackBlack.TabIndex = 12;
-            this.pGearBackBlack.TabStop = false;
-            this.pGearBackBlack.MouseDown += new System.Windows.Forms.MouseEventHandler(this.bVisualDown);
-            this.pGearBackBlack.MouseUp += new System.Windows.Forms.MouseEventHandler(this.bVisualUp);
+            this.pLoad.WaitOnLoad = true;
             // 
             // FormAnalyze
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BorderStyle = MetroFramework.Forms.MetroFormBorderStyle.FixedSingle;
             this.ClientSize = new System.Drawing.Size(424, 300);
-            this.Controls.Add(this.pGearBack);
-            this.Controls.Add(this.pGearBackBlack);
+            this.Controls.Add(this.bGear);
             this.Controls.Add(this.pLoad);
             this.Controls.Add(this.gridAnalyze);
             this.Controls.Add(this.tbStatus);
+            this.MaximizeBox = false;
             this.MaximumSize = new System.Drawing.Size(424, 300);
+            this.MinimizeBox = false;
+            this.Movable = false;
             this.Name = "FormAnalyze";
+            this.Padding = new System.Windows.Forms.Padding(5, 60, 5, 5);
+            this.Resizable = false;
+            this.Style = MetroFramework.MetroColorStyle.Silver;
             this.Text = "Analyze";
-            ((System.ComponentModel.ISupportInitialize)(this.pGearBack)).EndInit();
+            this.TransparencyKey = System.Drawing.Color.AliceBlue;
             ((System.ComponentModel.ISupportInitialize)(this.gridAnalyze)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pLoad)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pGearBackBlack)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -194,8 +192,7 @@ namespace VibeBot
         private MetroFramework.Controls.MetroTextBox tbStatus;
         private MetroFramework.Controls.MetroGrid gridAnalyze;
         private System.Windows.Forms.PictureBox pLoad;
-        private System.Windows.Forms.PictureBox pGearBack;
-        private System.Windows.Forms.PictureBox pGearBackBlack;
         private ToolTip tooltip;
+        private Button bGear;
     }
 }
