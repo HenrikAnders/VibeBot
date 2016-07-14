@@ -224,7 +224,7 @@ namespace VibeBot
 
         private void formClick(object sender, EventArgs e)
         {
-            tbAbout.Visible = tbAbout.Visible ? false : true; //if text alway shown, hide it      
+
         }
     }
 }
