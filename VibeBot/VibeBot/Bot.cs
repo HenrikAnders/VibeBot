@@ -35,7 +35,7 @@ namespace VibeBot
                 try
                 {
 
-                    if (file.Contains(".wav"))
+                    if (file.Contains(".wav")||file.Contains(".flac"))
                     {
                         Process p = new Process();
                         p.StartInfo.FileName = "lame.exe";
@@ -125,7 +125,7 @@ namespace VibeBot
 
             float gain = 0;
             int index = 0; List<KeyValuePair<String, float>> gainValue = new List<KeyValuePair<String, float>>();
-            if (getFiles().Contains(".mp3"))
+            if (files.Any(str=>str.Contains(".mp3")))      //ony do analyzing if list contains mp3´s
 
             {//get list of analyzed files    
                 string tempFile = Path.GetTempPath() + "analyzedGain.tmp";
@@ -133,6 +133,7 @@ namespace VibeBot
                 {   //if reanalyze equals true, the existing .tmp file would be cleaned up 
                     File.WriteAllText(tempFile, String.Empty);
                 }
+                #region get already analyzed files
                 if (File.Exists(tempFile) && new FileInfo(tempFile).Length != 0 && reanalyze == false)
                 {
                     string line = "";
@@ -145,8 +146,10 @@ namespace VibeBot
                         }
                     }
                 }
+                #endregion
                 else
-                {
+                {  
+                    #region analyze files
                     using (StreamWriter streamFile = new StreamWriter(tempFile))
                     {
                         //   File.Create(tempFile);
@@ -182,8 +185,7 @@ namespace VibeBot
                                         gainValue.Insert(index, new KeyValuePair<string, float>(track, gain));
                                     }
                                     catch
-                                    {
-                                        //no need to implement
+                                    { //no need to implement 
                                     }
                                     index++;
                                 }
@@ -192,6 +194,7 @@ namespace VibeBot
                                     Console.WriteLine(e);
                                     MetroMessageBox.Show(Form.ActiveForm, files.ElementAt(i) + " is used in another programm!", "Analyze Error");
                                 }
+#endregion
                                 try
                                 {
                                     //write analyzed file into temp file
@@ -204,8 +207,8 @@ namespace VibeBot
                 }
             }
             else
-            {
-                gainValue.Insert(0, new KeyValuePair<string, float>("No wave or mp3 files at this path",-87));
+            {    //write error into list if no mp3 files found
+                gainValue.Insert(0, new KeyValuePair<string, float>("! No files found !",-87));
             }
             await Task.Delay(1);
             return gainValue;

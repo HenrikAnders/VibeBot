@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Threading.Tasks;
 using MetroFramework.Forms;
-using Microsoft.Win32;
+
 using System.Linq;
 using System.Globalization;
 using MetroFramework;
 using System.IO;
 using System.Windows.Forms;
-using System.Collections.Generic;
+using Microsoft.Win32;
 
 namespace VibeBot
 {
@@ -21,14 +21,14 @@ namespace VibeBot
             pLoad.Visible = false;
             tbPath.Text = getPath();
             tbdB.Text = "6";
-            picComplete.Visible = false;
+            pComplete.Visible = false;
             this.MaximizeBox = false;
             tbAbout.Visible = false;
         }
 
         private void Path_Click(object sender, EventArgs e)
         {
-            picComplete.Visible = false;
+            pComplete.Visible = false;
             tbPath.Text = "";
             resetStatus();
         }
@@ -46,7 +46,7 @@ namespace VibeBot
                 tbPath.Enabled = false;
                 cbDelete.Enabled = false;
                 cbReset.Enabled = false;
-                picComplete.Visible = false;
+                pComplete.Visible = false;
                 tbStatus.Text = "";
 
                 Bot bot = new Bot(setPath());
@@ -63,7 +63,7 @@ namespace VibeBot
 
                 tbStatus.ForeColor = System.Drawing.Color.Blue;
                 pLoad.Visible = false;
-                picComplete.Visible = true;
+                pComplete.Visible = true;
 
                 tbdB.Enabled = true;
                 tbPath.Enabled = true;
@@ -135,14 +135,14 @@ namespace VibeBot
 
         private void pathTextChanged(object sender, EventArgs e)
         {
-            picComplete.Visible = false;
+            pComplete.Visible = false;
             bRun.Enabled = validate();
         }
 
         private void tbDBTextChanged(object sender, EventArgs e)
         {
             resetStatus();
-            picComplete.Visible = false;
+            pComplete.Visible = false;
             lLevel.ForeColor = System.Drawing.Color.Black;
             try
             {     //if it´s not a number show "Invalid input"
@@ -161,7 +161,7 @@ namespace VibeBot
         private void folderBrowserClick(object sender, EventArgs e)
         {
             resetStatus();
-            picComplete.Visible = false;
+            pComplete.Visible = false;
             if (folderBrowser.ShowDialog() == DialogResult.OK)
             {
                 tbPath.Text = folderBrowser.SelectedPath;
@@ -171,13 +171,13 @@ namespace VibeBot
         //invoke the analyze window
         private async void bAnalyze(object sender, EventArgs e)
         {                    
-            picComplete.Visible = false;           
+            pComplete.Visible = false;           
             await Task.Run(() => new FormAnalyze(setPath()));            
         }
         private void cbResetChecked(object sender, EventArgs e)
         {
             resetStatus();
-            picComplete.Visible = false;
+            pComplete.Visible = false;
             tbdB.Text = cbReset.Checked ? "0" : "6";
             tbdB.Enabled = cbReset.Checked? false :true ;    //if checked, tbTextbox disabled
         }
@@ -219,12 +219,13 @@ namespace VibeBot
         private void bDeuClick(object sender, EventArgs e)
         {
             tbAbout.ForeColor = System.Drawing.Color.DimGray;
-            tbAbout.Text = "Generelles über VibeBot \r\nDieses Programm wandelt stereo wave Dateien in stereo mp3 \r\nDateien um. Dateien werden mit einer Abtastrate von 44100 Hz (44.1Khz) gelesen. Das Resultat sind audio Dateien mit einer \r\nQualität von 320kBits/s. Die konvertierten Dateien werden mit dem eingebenen Wert verlustlos normalisiert. Danach wird der Liedname und der Komponist in den Metadaten gespeichert. Dies ist nur unter der folgenden Syntx möglich: Bsp. Dj Reverb - Hydra \r\n'Dj Reverb' ist der Komponist und 'Hydra' der Titel. Beide Elemente werden durch einen Bindestrich getrennt. Die Reihenfolge muss eingehalten werden";
-        }
+            tbAbout.Text = "Generelles über VibeBot \r\nDieses Programm wandelt stereo wave Dateien in stereo mp3 \r\nDateien um. Dateien werden mit einer Abtastrate von 44100 Hz (44.1Khz) gelesen.\r\nDas Resultat sind audio Dateien mit einer Qualität von 320kBits/s.\r\n Die konvertierten Dateien werden mit dem eingebenen Wert verlustlos normalisiert. Danach wird der Liedname und der Komponist in den Metadaten gespeichert. Dies ist nur unter der folgenden Syntx möglich: Bsp. Dj Reverb - Hydra \r\n'Dj Reverb' ist der Komponist und 'Hydra' der Titel. Beide Elemente werden durch \r\neinen Bindestrich getrennt. Die Reihenfolge muss eingehalten werden";
+        }     
 
-        private void formClick(object sender, EventArgs e)
+        private void cbDeleteChecked(object sender, EventArgs e)
         {
-
+            pComplete.Visible = false;
+            resetStatus();
         }
     }
 }
