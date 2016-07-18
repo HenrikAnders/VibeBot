@@ -4,23 +4,23 @@ using System.Collections.Generic;
 using System.Data;
 using System.Drawing;       
 using System.Threading.Tasks;
-using System.Windows.Forms;
+using System.Windows.Forms;     
 
 namespace VibeBot
 {
     public partial class FormAnalyze : MetroForm
     {
-        string path = "";       
+        string path = "";
+        Bot bot;
         public  FormAnalyze(string path)
         {                
             this.path = path;   
             InitializeComponent();          
             pLoad.Visible = true;
             fillGrid(false);  //should wait until method is finished, but constructor can´t be asynch  
-            ShowDialog();
-            
-
+            ShowDialog();     
         }
+
         /// <summary>
         /// fill the dataGridView
         /// </summary>
@@ -31,7 +31,7 @@ namespace VibeBot
             DataRow row ;
             dt.Columns.Add("Track");
             dt.Columns.Add("Gain");
-            Bot bot = new Bot(path);
+             bot  = new Bot(path);
             foreach (KeyValuePair<string, float> kvp in await bot.analyze(path, reanalyze))
             {
                 row = dt.NewRow();
@@ -78,6 +78,20 @@ namespace VibeBot
             //pGearBackBlack.Visible = false;
             //pGearBackBlack.SendToBack();
             //tbStatus.SendToBack();  
+        }
+        
+
+        private void deleteListener(object sender, KeyEventArgs e)
+        {   //button "del" listener   KeyPress   
+            bot = new Bot(path);
+            if (e.KeyCode == Keys.Delete)
+            {         
+                foreach (DataGridViewRow item in gridAnalyze.SelectedRows)
+                {                                                                
+                     bot.deleteSelection(item.Cells["Track"].Value.ToString());
+                     gridAnalyze.Rows.RemoveAt(item.Index);
+                }
+            }
         }
     }
 }

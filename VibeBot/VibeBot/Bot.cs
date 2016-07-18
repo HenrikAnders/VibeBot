@@ -3,9 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;                      
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Microsoft.VisualBasic.FileIO;
 
 namespace VibeBot
 {
@@ -21,7 +22,7 @@ namespace VibeBot
         }
 
         public List<String> getFiles()
-        {
+        {       
             return Directory.GetFiles(path).ToList();
         }
 
@@ -153,7 +154,7 @@ namespace VibeBot
                     using (StreamWriter streamFile = new StreamWriter(tempFile))
                     {
                         //   File.Create(tempFile);
-                        string track = "";
+                        string track = "";                                                        
                         for (int i = 0; i < files.Count; i++)
                         {
                             if (files.ElementAt(i).Contains(".mp3"))
@@ -177,11 +178,10 @@ namespace VibeBot
                                             break;
                                         }
                                     }
-                                    p.WaitForExit();
-                                    TagLib.File fileTag = TagLib.File.Create(files.ElementAt(i));
+                                    p.WaitForExit();      
                                     try
-                                    {            //write file into keyvalue list
-                                        track = fileTag.Tag.Performers[0] + "-" + fileTag.Tag.Title;
+                                    {   //write file into keyvalue list
+                                        track = Path.GetFileNameWithoutExtension(files.ElementAt(i));
                                         gainValue.Insert(index, new KeyValuePair<string, float>(track, gain));
                                     }
                                     catch
@@ -228,9 +228,9 @@ namespace VibeBot
                     if (file.Contains(".mp3"))
                     {
                         TagLib.File filetoTag = TagLib.File.Create(file);
-                        filetoTag.Tag.Title = fileName.Substring(fileName.IndexOf("-") + 2);
+                        filetoTag.Tag.Title = fileName.Substring(fileName.IndexOf("-") + 1);
                         filetoTag.Tag.Performers = null;
-                        filetoTag.Tag.Performers = new[] { fileName.Substring(0, fileName.IndexOf("-") - 1) };
+                        filetoTag.Tag.Performers = new[] { fileName.Substring(0, fileName.IndexOf("-") ) };
                         filetoTag.Save();
                     }
                 }
@@ -240,6 +240,17 @@ namespace VibeBot
                 }
             }
             await Task.Delay(1);
+        }
+
+        public void deleteSelection(String element) {
+            List<string> files = getFiles();
+            foreach (String file in files)
+            {  //get the path from file in directory and delete it
+                if (file.Contains(element))
+                {
+                    FileSystem.DeleteFile(file, UIOption.OnlyErrorDialogs,  RecycleOption.SendToRecycleBin);
+                }
+            }
         }
     }
 }
