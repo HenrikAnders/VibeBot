@@ -26,9 +26,10 @@ namespace VibeBot
             tbdB.Text = "6";
             pComplete.Visible = false;
             this.MaximizeBox = false;
-            fillGrid(false);  //should wait until method is finished, but constructor can´t be asynch  
+            fillGrid(false);  //should wait until method is finished, but constructor can´t be asynch   
             tbAbout.Text = "About VibeBot \r\nThis program convert stereo wave files to stereo mp3 files.\r\nFiles are encoded with the samplerate of 44100 Hz (44.1kHz)\r\nThe result are 320kBits/s high quality audio files. The convertetd files\r\nwill be normalized at the given value, without any loss of data.\r\nAfter that, track artist and title is written into the metadata.\r\nThis is called tagging. Tagging will only be succsessfully, if the filename is in the required synthax.\r\nFor example: Dj Reverb - Hydra\r\n'Dj Reverb' is the artist and 'Hydra' the title, the elements \r\nare seperated by a hyphen. Keep the right order.";
             tabControl.SelectedTab = tabPage1;
+            tabControl.DisableTab(tabempty);
         }
 
         private void Path_Click(object sender, EventArgs e)
@@ -57,7 +58,7 @@ namespace VibeBot
                 bot = new Bot(setPath());
                 tbState.AppendText("Info:");
 
-            pLoad.Visible = true;
+                pLoad.Visible = true;
                 await Task.Run(() => bot.convert(cbDelete.Checked));
                 tbState.AppendText(" Converted \u221A, ");
 
@@ -190,7 +191,9 @@ namespace VibeBot
             if (!tbAbout.Visible)
                 resetStatus();
         }
-
+        /// <summary>
+        /// clear the tbState info field
+        /// </summary>
         private void resetStatus()
         {
             tbState.Text = "   ";
@@ -219,18 +222,13 @@ namespace VibeBot
         private void bDeuClick(object sender, EventArgs e)
         {
             tbAbout.ForeColor = System.Drawing.Color.DimGray;
-            tbAbout.Text = "Generelles über VibeBot \r\nDieses Programm wandelt stereo wave Dateien in stereo mp3 \r\nDateien um. Dateien werden mit einer Abtastrate von 44100 Hz (44.1Khz) gelesen.\r\nDas Resultat sind audio Dateien mit einer Qualität von 320kBits/s. Die konvertierten Dateien\r\nwerden mit dem eingebenen Wert verlustlos normalisiert. Danach wird der Liedname und der Komponist\r\nin den Metadaten gespeichert. Dies ist nur unter der folgenden Syntx möglich: \r\nBsp. Dj Reverb - Hydra \r\n'Dj Reverb' ist der Komponist und 'Hydra' der Titel. Beide Elemente werden durch \r\neinen Bindestrich getrennt. Die Reihenfolge muss eingehalten werden";
+            tbAbout.Text = "Generelles über VibeBot \r\nDieses Programm wandelt stereo wave Dateien in stereo mp3 \r\nDateien um. Dateien werden mit einer Abtastrate von 44100 Hz (44.1Khz) gelesen.\r\nDas Resultat sind audio Dateien mit einer Qualität von 320kBits/s. Die konvertierten Dateien\r\nwerden mit dem eingebenen Wert verlustlos normalisiert. Danach wird der Liedname und der Komponist\r\nin den Metadaten gespeichert. Dies ist nur unter der folgenden Syntx möglich: \r\nBsp. Dj Reverb - Hydra \r\n'Dj Reverb' ist der Komponist und 'Hydra' der Titel. Beide Elemente werden durch \r\neinen Bindestrich getrennt. Die Reihenfolge muss eingehalten werden.";
         }
 
         private void cbDeleteChecked(object sender, EventArgs e)
         {
             pComplete.Visible = false;
             resetStatus();
-        }
-
-        private void tabChanged(object sender, EventArgs e)
-        {                                                     
-               
         }
 
         /// <summary>
@@ -255,7 +253,8 @@ namespace VibeBot
             {
                 gridAnalyze.DataSource = dt;
                 gridAnalyze.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill; //adjust header size to overall table
-                gridAnalyze.ColumnHeadersDefaultCellStyle.BackColor = System.Drawing.Color.Gray;   //headers gray
+                gridAnalyze.ColumnHeadersDefaultCellStyle.BackColor = System.Drawing.Color.LightGray;   //headers gray
+                gridAnalyze.ColumnHeadersDefaultCellStyle.ForeColor = System.Drawing.Color.Black;   //header letters black
                 gridAnalyze.EnableHeadersVisualStyles = false;
                 gridAnalyze.RowHeadersVisible = false;
                 gridAnalyze.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader);//optimize cell size
@@ -272,16 +271,16 @@ namespace VibeBot
             pLoad.Visible = true;
             gridAnalyze.DataSource = await Task.Run(() => fillGrid(true));
             //do all GridView stuff in here because from other Task is no access to gridview
-            gridAnalyze.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;//adjust header size to overall table
-            gridAnalyze.ColumnHeadersDefaultCellStyle.BackColor = System.Drawing.Color.Gray;     //headers gray
+            gridAnalyze.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;//adjust header size to overall table   
+            gridAnalyze.ColumnHeadersDefaultCellStyle.BackColor = System.Drawing.Color.LightGray;   //headers gray
+            gridAnalyze.ColumnHeadersDefaultCellStyle.ForeColor = System.Drawing.Color.Black;   //header letters black
             gridAnalyze.EnableHeadersVisualStyles = false;
             gridAnalyze.RowHeadersVisible = false;
             gridAnalyze.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader);//optimize cell size
             pLoad.Visible = false;
             gridAnalyze.Visible = true;
-            //    tbState.SendToBack();
+            // tbState.SendToBack();
         }
-
 
         private void deleteListener(object sender, KeyEventArgs e)
         {   //button "del" listener   KeyPress   
@@ -297,4 +296,3 @@ namespace VibeBot
         }
     }
 }
-
