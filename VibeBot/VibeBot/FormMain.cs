@@ -17,13 +17,12 @@ namespace VibeBot
         {
             InitializeComponent();
             TopMost = false; // without the Messageboxes will bi hidden behind the main window
-            tbStatus.Visible = true;
+            //tbStatus.Visible = true;
             pLoad.Visible = false;
             tbPath.Text = getPath();
             tbdB.Text = "6";
             pComplete.Visible = false;
-            this.MaximizeBox = false;
-            tbAbout.Visible = false;
+            this.MaximizeBox = false;  
         }
 
         private void Path_Click(object sender, EventArgs e)
@@ -47,21 +46,21 @@ namespace VibeBot
                 cbDelete.Enabled = false;
                 cbReset.Enabled = false;
                 pComplete.Visible = false;
-                tbStatus.Text = "";
+             //   tbStatus.Text = "";
 
                 Bot bot = new Bot(setPath());
 
                 pLoad.Visible = true;
                 await Task.Run(() => bot.convert(cbDelete.Checked));
-                tbStatus.AppendText("Converted, ");
+              //  tbStatus.AppendText("Converted, ");
 
                 await Task.Run(() => bot.normazize(float.Parse(tbdB.Text, CultureInfo.InvariantCulture.NumberFormat), cbReset.Checked));
-                tbStatus.AppendText("normalized ");
+             //   tbStatus.AppendText("normalized ");
 
                 await Task.Run(() => bot.tagging());
-                tbStatus.AppendText("and tagged is complete");
+            //    tbStatus.AppendText("and tagged is complete");
 
-                tbStatus.ForeColor = System.Drawing.Color.Blue;
+              //  tbStatus.ForeColor = System.Drawing.Color.Blue;
                 pLoad.Visible = false;
                 pComplete.Visible = true;
 
@@ -184,7 +183,7 @@ namespace VibeBot
 
         private void bInfo(object sender, EventArgs e)
         {
-            tbStatus.Text = "";
+         //   tbStatus.Text = "";
             bEnglish.Visible = tbAbout.Visible ? false : true;//if info is shown, Button eng is also shown
             bDeutsch.Visible = tbAbout.Visible ? false : true;//if info is shown, Button deu is also shown
             tbAbout.Visible = tbAbout.Visible ? false: true; //if text alway shown, hide it      
@@ -193,7 +192,7 @@ namespace VibeBot
         }
 
         private void resetStatus() {
-            tbStatus.Text = "   Converting from wav to mp3, normalizing and tagging";
+        //    tbStatus.Text = "   Converting from wav to mp3, normalizing and tagging";
         }
 
         private void cbEverwrite(object sender, EventArgs e)
@@ -213,13 +212,13 @@ namespace VibeBot
         private void bEngClick(object sender, EventArgs e)
         {
             tbAbout.ForeColor = System.Drawing.Color.DimGray;
-            tbAbout.Text = "About VibeBot \r\nThis program convert stereo wave files to stereo mp3 files.\r\nFiles are encoded with the samplerate of 44100 Hz (44.1kHz)\r\nThe result are 320kBits/s high quality audio files. The convertetd files\r\nwill be normalized at the given value, without any loss of data.\r\nAfter that, track artist and title is written into the metadata.\r\nThis is called tagging. Tagging will only be succsessfully, if the\r\nfilename is in the required synthax. For example: \r\nDj Reverb - Hydra\r\n'Dj Reverb' is the artist and 'Hydra' the title, the elements \r\nare seperated by a hyphen.";
+            tbAbout.Text = " \r\nAbout VibeBot \r\nThis program convert stereo wave files to stereo mp3 files.\r\nFiles are encoded with the samplerate of 44100 Hz (44.1kHz)\r\nThe result are 320kBits/s high quality audio files. The convertetd files\r\nwill be normalized at the given value, without any loss of data.\r\nAfter that, track artist and title is written into the metadata.\r\nThis is called tagging. Tagging will only be succsessfully, if the filename is in the required synthax.\r\nFor example: Dj Reverb - Hydra\r\n'Dj Reverb' is the artist and 'Hydra' the title, the elements \r\nare seperated by a hyphen. Keep the right order.";
         }
 
         private void bDeuClick(object sender, EventArgs e)
         {
             tbAbout.ForeColor = System.Drawing.Color.DimGray;
-            tbAbout.Text = "Generelles über VibeBot \r\nDieses Programm wandelt stereo wave Dateien in stereo mp3 \r\nDateien um. Dateien werden mit einer Abtastrate von 44100 Hz (44.1Khz) gelesen.\r\nDas Resultat sind audio Dateien mit einer Qualität von 320kBits/s.\r\n Die konvertierten Dateien werden mit dem eingebenen Wert verlustlos normalisiert. Danach wird der Liedname und der Komponist in den Metadaten gespeichert. Dies ist nur unter der folgenden Syntx möglich: Bsp. Dj Reverb - Hydra \r\n'Dj Reverb' ist der Komponist und 'Hydra' der Titel. Beide Elemente werden durch \r\neinen Bindestrich getrennt. Die Reihenfolge muss eingehalten werden";
+            tbAbout.Text = " \r\nGenerelles über VibeBot \r\nDieses Programm wandelt stereo wave Dateien in stereo mp3 \r\nDateien um. Dateien werden mit einer Abtastrate von 44100 Hz (44.1Khz) gelesen.\r\nDas Resultat sind audio Dateien mit einer Qualität von 320kBits/s. Die konvertierten Dateien\r\nwerden mit dem eingebenen Wert verlustlos normalisiert. Danach wird der Liedname und der Komponist\r\nin den Metadaten gespeichert. Dies ist nur unter der folgenden Syntx möglich: \r\nBsp. Dj Reverb - Hydra \r\n'Dj Reverb' ist der Komponist und 'Hydra' der Titel. Beide Elemente werden durch \r\neinen Bindestrich getrennt. Die Reihenfolge muss eingehalten werden";
         }     
 
         private void cbDeleteChecked(object sender, EventArgs e)
@@ -227,5 +226,11 @@ namespace VibeBot
             pComplete.Visible = false;
             resetStatus();
         }
+
+        private void tabChanged(object sender, EventArgs e)
+        {
+            if(this.tapControl.SelectedTab == tabPage3)
+                tbAbout.Text = " \r\nAbout VibeBot \r\nThis program convert stereo wave files to stereo mp3 files.\r\nFiles are encoded with the samplerate of 44100 Hz (44.1kHz)\r\nThe result are 320kBits/s high quality audio files. The convertetd files\r\nwill be normalized at the given value, without any loss of data.\r\nAfter that, track artist and title is written into the metadata.\r\nThis is called tagging. Tagging will only be succsessfully, if the filename is in the required synthax.\r\nFor example: Dj Reverb - Hydra\r\n'Dj Reverb' is the artist and 'Hydra' the title, the elements \r\nare seperated by a hyphen. Keep the right order.";
+        }         
     }
 }
