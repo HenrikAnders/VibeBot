@@ -8,21 +8,27 @@ using MetroFramework;
 using System.IO;
 using System.Windows.Forms;
 using Microsoft.Win32;
+using System.Data;
+using System.Collections.Generic;
 
 namespace VibeBot
 {
     public partial class VibeBot : MetroForm
     {
+        Bot bot;
         public VibeBot()
         {
             InitializeComponent();
             TopMost = false; // without the Messageboxes will bi hidden behind the main window
-            //tbStatus.Visible = true;
+            tbState.Visible = true;
             pLoad.Visible = false;
             tbPath.Text = getPath();
             tbdB.Text = "6";
             pComplete.Visible = false;
-            this.MaximizeBox = false;  
+            this.MaximizeBox = false;
+            fillGrid(false);  //should wait until method is finished, but constructor can´t be asynch  
+            tbAbout.Text = "About VibeBot \r\nThis program convert stereo wave files to stereo mp3 files.\r\nFiles are encoded with the samplerate of 44100 Hz (44.1kHz)\r\nThe result are 320kBits/s high quality audio files. The convertetd files\r\nwill be normalized at the given value, without any loss of data.\r\nAfter that, track artist and title is written into the metadata.\r\nThis is called tagging. Tagging will only be succsessfully, if the filename is in the required synthax.\r\nFor example: Dj Reverb - Hydra\r\n'Dj Reverb' is the artist and 'Hydra' the title, the elements \r\nare seperated by a hyphen. Keep the right order.";
+            tabControl.SelectedTab = tabPage1;
         }
 
         private void Path_Click(object sender, EventArgs e)
@@ -46,21 +52,22 @@ namespace VibeBot
                 cbDelete.Enabled = false;
                 cbReset.Enabled = false;
                 pComplete.Visible = false;
-             //   tbStatus.Text = "";
+                tbState.Text = "";
 
-                Bot bot = new Bot(setPath());
+                bot = new Bot(setPath());
+                tbState.AppendText("Info:");
 
-                pLoad.Visible = true;
+            pLoad.Visible = true;
                 await Task.Run(() => bot.convert(cbDelete.Checked));
-              //  tbStatus.AppendText("Converted, ");
+                tbState.AppendText(" Converted \u221A, ");
 
                 await Task.Run(() => bot.normazize(float.Parse(tbdB.Text, CultureInfo.InvariantCulture.NumberFormat), cbReset.Checked));
-             //   tbStatus.AppendText("normalized ");
+                tbState.AppendText("normalized \u221A");
 
                 await Task.Run(() => bot.tagging());
-            //    tbStatus.AppendText("and tagged is complete");
+                tbState.AppendText(", tagged \u221A");
 
-              //  tbStatus.ForeColor = System.Drawing.Color.Blue;
+                tbState.ForeColor = System.Drawing.Color.Blue;
                 pLoad.Visible = false;
                 pComplete.Visible = true;
 
@@ -166,33 +173,27 @@ namespace VibeBot
                 tbPath.Text = folderBrowser.SelectedPath;
             }
         }
-
-        //invoke the analyze window
-        private async void bAnalyze(object sender, EventArgs e)
-        {                    
-            pComplete.Visible = false;           
-            await Task.Run(() => new FormAnalyze(setPath()));            
-        }
         private void cbResetChecked(object sender, EventArgs e)
         {
             resetStatus();
             pComplete.Visible = false;
             tbdB.Text = cbReset.Checked ? "0" : "6";
-            tbdB.Enabled = cbReset.Checked? false :true ;    //if checked, tbTextbox disabled
+            tbdB.Enabled = cbReset.Checked ? false : true;    //if checked, tbTextbox disabled
         }
 
         private void bInfo(object sender, EventArgs e)
         {
-         //   tbStatus.Text = "";
+            tbState.Text = "";
             bEnglish.Visible = tbAbout.Visible ? false : true;//if info is shown, Button eng is also shown
             bDeutsch.Visible = tbAbout.Visible ? false : true;//if info is shown, Button deu is also shown
-            tbAbout.Visible = tbAbout.Visible ? false: true; //if text alway shown, hide it      
+            tbAbout.Visible = tbAbout.Visible ? false : true; //if text alway shown, hide it      
             if (!tbAbout.Visible)
                 resetStatus();
         }
 
-        private void resetStatus() {
-        //    tbStatus.Text = "   Converting from wav to mp3, normalizing and tagging";
+        private void resetStatus()
+        {
+            tbState.Text = "   ";
         }
 
         private void cbEverwrite(object sender, EventArgs e)
@@ -212,14 +213,14 @@ namespace VibeBot
         private void bEngClick(object sender, EventArgs e)
         {
             tbAbout.ForeColor = System.Drawing.Color.DimGray;
-            tbAbout.Text = " \r\nAbout VibeBot \r\nThis program convert stereo wave files to stereo mp3 files.\r\nFiles are encoded with the samplerate of 44100 Hz (44.1kHz)\r\nThe result are 320kBits/s high quality audio files. The convertetd files\r\nwill be normalized at the given value, without any loss of data.\r\nAfter that, track artist and title is written into the metadata.\r\nThis is called tagging. Tagging will only be succsessfully, if the filename is in the required synthax.\r\nFor example: Dj Reverb - Hydra\r\n'Dj Reverb' is the artist and 'Hydra' the title, the elements \r\nare seperated by a hyphen. Keep the right order.";
+            tbAbout.Text = "About VibeBot \r\nThis program convert stereo wave files to stereo mp3 files.\r\nFiles are encoded with the samplerate of 44100 Hz (44.1kHz)\r\nThe result are 320kBits/s high quality audio files. The convertetd files\r\nwill be normalized at the given value, without any loss of data.\r\nAfter that, track artist and title is written into the metadata.\r\nThis is called tagging. Tagging will only be succsessfully, if the filename is in the required synthax.\r\nFor example: Dj Reverb - Hydra\r\n'Dj Reverb' is the artist and 'Hydra' the title, the elements \r\nare seperated by a hyphen. Keep the right order.";
         }
 
         private void bDeuClick(object sender, EventArgs e)
         {
             tbAbout.ForeColor = System.Drawing.Color.DimGray;
-            tbAbout.Text = " \r\nGenerelles über VibeBot \r\nDieses Programm wandelt stereo wave Dateien in stereo mp3 \r\nDateien um. Dateien werden mit einer Abtastrate von 44100 Hz (44.1Khz) gelesen.\r\nDas Resultat sind audio Dateien mit einer Qualität von 320kBits/s. Die konvertierten Dateien\r\nwerden mit dem eingebenen Wert verlustlos normalisiert. Danach wird der Liedname und der Komponist\r\nin den Metadaten gespeichert. Dies ist nur unter der folgenden Syntx möglich: \r\nBsp. Dj Reverb - Hydra \r\n'Dj Reverb' ist der Komponist und 'Hydra' der Titel. Beide Elemente werden durch \r\neinen Bindestrich getrennt. Die Reihenfolge muss eingehalten werden";
-        }     
+            tbAbout.Text = "Generelles über VibeBot \r\nDieses Programm wandelt stereo wave Dateien in stereo mp3 \r\nDateien um. Dateien werden mit einer Abtastrate von 44100 Hz (44.1Khz) gelesen.\r\nDas Resultat sind audio Dateien mit einer Qualität von 320kBits/s. Die konvertierten Dateien\r\nwerden mit dem eingebenen Wert verlustlos normalisiert. Danach wird der Liedname und der Komponist\r\nin den Metadaten gespeichert. Dies ist nur unter der folgenden Syntx möglich: \r\nBsp. Dj Reverb - Hydra \r\n'Dj Reverb' ist der Komponist und 'Hydra' der Titel. Beide Elemente werden durch \r\neinen Bindestrich getrennt. Die Reihenfolge muss eingehalten werden";
+        }
 
         private void cbDeleteChecked(object sender, EventArgs e)
         {
@@ -228,9 +229,72 @@ namespace VibeBot
         }
 
         private void tabChanged(object sender, EventArgs e)
+        {                                                     
+               
+        }
+
+        /// <summary>
+        /// fill the dataGridView
+        /// </summary>
+        /// <param name="reanalyze">indicates whether the values have to be recalculated</param>
+        private async Task<DataTable> fillGrid(bool reanalyze)
         {
-            if(this.tapControl.SelectedTab == tabPage3)
-                tbAbout.Text = " \r\nAbout VibeBot \r\nThis program convert stereo wave files to stereo mp3 files.\r\nFiles are encoded with the samplerate of 44100 Hz (44.1kHz)\r\nThe result are 320kBits/s high quality audio files. The convertetd files\r\nwill be normalized at the given value, without any loss of data.\r\nAfter that, track artist and title is written into the metadata.\r\nThis is called tagging. Tagging will only be succsessfully, if the filename is in the required synthax.\r\nFor example: Dj Reverb - Hydra\r\n'Dj Reverb' is the artist and 'Hydra' the title, the elements \r\nare seperated by a hyphen. Keep the right order.";
-        }         
+            DataTable dt = new DataTable();
+            DataRow row;
+            dt.Columns.Add("Track");
+            dt.Columns.Add("Gain");
+            bot = new Bot(setPath());
+            foreach (KeyValuePair<string, float> kvp in await bot.analyze(setPath(), reanalyze))
+            {
+                row = dt.NewRow();
+                row["Track"] = kvp.Key;
+                row["Gain"] = (kvp.Value + 87);
+                dt.Rows.Add(row);
+            }
+            if (!reanalyze)
+            {
+                gridAnalyze.DataSource = dt;
+                gridAnalyze.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill; //adjust header size to overall table
+                gridAnalyze.ColumnHeadersDefaultCellStyle.BackColor = System.Drawing.Color.Gray;   //headers gray
+                gridAnalyze.EnableHeadersVisualStyles = false;
+                gridAnalyze.RowHeadersVisible = false;
+                gridAnalyze.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader);//optimize cell size
+                pLoad.Visible = false;
+            }
+            await Task.Delay(1);
+            return dt;
+        }
+
+        private async void bReanalyze(object sender, EventArgs e)
+        {   //click Listener    
+            //  animation();  //no function...don´t no why       
+            gridAnalyze.Visible = false;
+            pLoad.Visible = true;
+            gridAnalyze.DataSource = await Task.Run(() => fillGrid(true));
+            //do all GridView stuff in here because from other Task is no access to gridview
+            gridAnalyze.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;//adjust header size to overall table
+            gridAnalyze.ColumnHeadersDefaultCellStyle.BackColor = System.Drawing.Color.Gray;     //headers gray
+            gridAnalyze.EnableHeadersVisualStyles = false;
+            gridAnalyze.RowHeadersVisible = false;
+            gridAnalyze.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader);//optimize cell size
+            pLoad.Visible = false;
+            gridAnalyze.Visible = true;
+            //    tbState.SendToBack();
+        }
+
+
+        private void deleteListener(object sender, KeyEventArgs e)
+        {   //button "del" listener   KeyPress   
+            bot = new Bot(setPath());
+            if (e.KeyCode == Keys.Delete)
+            {
+                foreach (DataGridViewRow item in gridAnalyze.SelectedRows)
+                {
+                    bot.deleteSelection(item.Cells["Track"].Value.ToString());
+                    gridAnalyze.Rows.RemoveAt(item.Index);
+                }
+            }
+        }
     }
 }
+

@@ -34,6 +34,9 @@ namespace VibeBot
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(VibeBot));
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.pLoad = new System.Windows.Forms.PictureBox();
             this.tooltip = new System.Windows.Forms.ToolTip(this.components);
             this.pGear = new System.Windows.Forms.PictureBox();
@@ -43,29 +46,38 @@ namespace VibeBot
             this.tbdB = new MetroFramework.Controls.MetroTextBox();
             this.tbPath = new MetroFramework.Controls.MetroTextBox();
             this.bSearchPath = new MetroFramework.Controls.MetroTextBox.MetroTextButton();
+            this.pictureBox = new System.Windows.Forms.PictureBox();
+            this.bGear = new System.Windows.Forms.Button();
+            this.gridAnalyze = new MetroFramework.Controls.MetroGrid();
             this.pComplete = new System.Windows.Forms.PictureBox();
             this.folderBrowser = new System.Windows.Forms.FolderBrowserDialog();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.tapControl = new MetroFramework.Controls.MetroTabControl();
+            this.tabControl = new MetroFramework.Controls.MetroTabControl();
             this.tabPage1 = new MetroFramework.Controls.MetroTabPage();
             this.bRun = new MetroFramework.Controls.MetroTextBox.MetroTextButton();
             this.lUnit = new System.Windows.Forms.Label();
             this.ldB = new System.Windows.Forms.Label();
             this.lPath = new System.Windows.Forms.Label();
+            this.tbState = new System.Windows.Forms.TextBox();
             this.tabPage2 = new MetroFramework.Controls.MetroTabPage();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.tbAnaStatus = new MetroFramework.Controls.MetroTextBox();
             this.tabPage3 = new MetroFramework.Controls.MetroTabPage();
             this.tbAbout = new System.Windows.Forms.TextBox();
             this.bDeutsch = new MetroFramework.Controls.MetroTextBox.MetroTextButton();
             this.bEnglish = new MetroFramework.Controls.MetroTextBox.MetroTextButton();
-            this.pictureBox = new System.Windows.Forms.PictureBox();
+            this.bAnalyze = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pLoad)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pGear)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gridAnalyze)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pComplete)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            this.tapControl.SuspendLayout();
+            this.tabControl.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            this.tabPage2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.tabPage3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             this.SuspendLayout();
             // 
             // pLoad
@@ -93,7 +105,6 @@ namespace VibeBot
             this.pGear.TabStop = false;
             this.tooltip.SetToolTip(this.pGear, "Click, to open analyze window");
             this.pGear.Visible = false;
-            this.pGear.Click += new System.EventHandler(this.bAnalyze);
             // 
             // cbReset
             // 
@@ -225,6 +236,95 @@ namespace VibeBot
             this.bSearchPath.UseVisualStyleBackColor = true;
             this.bSearchPath.Click += new System.EventHandler(this.folderBrowserClick);
             // 
+            // pictureBox
+            // 
+            this.pictureBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.pictureBox.ErrorImage = global::VibeBot.Properties.Resources.Background;
+            this.pictureBox.ImageLocation = "VibeBot.Properties.Resources.Background";
+            this.pictureBox.InitialImage = global::VibeBot.Properties.Resources.Background;
+            this.pictureBox.Location = new System.Drawing.Point(-430, 49);
+            this.pictureBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.pictureBox.Name = "pictureBox";
+            this.pictureBox.Size = new System.Drawing.Size(750, 10);
+            this.pictureBox.TabIndex = 35;
+            this.pictureBox.TabStop = false;
+            this.tooltip.SetToolTip(this.pictureBox, "Show analysation");
+            // 
+            // bGear
+            // 
+            this.bGear.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.bGear.FlatAppearance.BorderColor = System.Drawing.Color.White;
+            this.bGear.FlatAppearance.BorderSize = 0;
+            this.bGear.FlatAppearance.MouseDownBackColor = System.Drawing.Color.White;
+            this.bGear.FlatAppearance.MouseOverBackColor = System.Drawing.Color.White;
+            this.bGear.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.bGear.ForeColor = System.Drawing.Color.White;
+            this.bGear.Image = global::VibeBot.Properties.Resources.gearBack;
+            this.bGear.Location = new System.Drawing.Point(385, 64);
+            this.bGear.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.bGear.Name = "bGear";
+            this.bGear.Size = new System.Drawing.Size(127, 163);
+            this.bGear.TabIndex = 18;
+            this.tooltip.SetToolTip(this.bGear, "Click to reanalyze");
+            this.bGear.UseVisualStyleBackColor = true;
+            this.bGear.Click += new System.EventHandler(this.bReanalyze);
+            // 
+            // gridAnalyze
+            // 
+            this.gridAnalyze.AllowUserToAddRows = false;
+            this.gridAnalyze.AllowUserToDeleteRows = false;
+            this.gridAnalyze.AllowUserToOrderColumns = true;
+            this.gridAnalyze.AllowUserToResizeRows = false;
+            this.gridAnalyze.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.gridAnalyze.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.gridAnalyze.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.None;
+            this.gridAnalyze.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableAlwaysIncludeHeaderText;
+            this.gridAnalyze.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            dataGridViewCellStyle1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gridAnalyze.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            this.gridAnalyze.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(136)))), ((int)(((byte)(136)))), ((int)(((byte)(136)))));
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.gridAnalyze.DefaultCellStyle = dataGridViewCellStyle2;
+            this.gridAnalyze.EnableHeadersVisualStyles = false;
+            this.gridAnalyze.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.gridAnalyze.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.gridAnalyze.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.gridAnalyze.Location = new System.Drawing.Point(0, 0);
+            this.gridAnalyze.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.gridAnalyze.Name = "gridAnalyze";
+            this.gridAnalyze.ReadOnly = true;
+            this.gridAnalyze.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            dataGridViewCellStyle3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gridAnalyze.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            this.gridAnalyze.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+            this.gridAnalyze.RowTemplate.Height = 24;
+            this.gridAnalyze.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.gridAnalyze.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.gridAnalyze.Size = new System.Drawing.Size(336, 196);
+            this.gridAnalyze.StandardTab = true;
+            this.gridAnalyze.Style = MetroFramework.MetroColorStyle.White;
+            this.gridAnalyze.TabIndex = 16;
+            this.gridAnalyze.Theme = MetroFramework.MetroThemeStyle.Light;
+            this.tooltip.SetToolTip(this.gridAnalyze, "Files from directory");
+            // 
             // pComplete
             // 
             this.pComplete.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
@@ -256,17 +356,16 @@ namespace VibeBot
             // 
             // tapControl
             // 
-            this.tapControl.Controls.Add(this.tabPage1);
-            this.tapControl.Controls.Add(this.tabPage2);
-            this.tapControl.Controls.Add(this.tabPage3);
-            this.tapControl.Location = new System.Drawing.Point(-4, 49);
-            this.tapControl.Name = "tapControl";
-            this.tapControl.SelectedIndex = 0;
-            this.tapControl.Size = new System.Drawing.Size(521, 268);
-            this.tapControl.TabIndex = 24;
-            this.tapControl.Theme = MetroFramework.MetroThemeStyle.Light;
-            this.tapControl.UseSelectable = true;
-            this.tapControl.Selected += new System.Windows.Forms.TabControlEventHandler(this.tabChanged);
+            this.tabControl.Controls.Add(this.tabPage1);
+            this.tabControl.Controls.Add(this.tabPage2);
+            this.tabControl.Controls.Add(this.tabPage3);
+            this.tabControl.Location = new System.Drawing.Point(-2, 52);
+            this.tabControl.Name = "tapControl";
+            this.tabControl.SelectedIndex = 2;
+            this.tabControl.Size = new System.Drawing.Size(521, 268);
+            this.tabControl.TabIndex = 24;
+            this.tabControl.Theme = MetroFramework.MetroThemeStyle.Light;
+            this.tabControl.UseSelectable = true;
             // 
             // tabPage1
             // 
@@ -280,12 +379,13 @@ namespace VibeBot
             this.tabPage1.Controls.Add(this.lPath);
             this.tabPage1.Controls.Add(this.tbdB);
             this.tabPage1.Controls.Add(this.tbPath);
+            this.tabPage1.Controls.Add(this.tbState);
             this.tabPage1.HorizontalScrollbarBarColor = true;
             this.tabPage1.HorizontalScrollbarHighlightOnWheel = false;
             this.tabPage1.HorizontalScrollbarSize = 10;
-            this.tabPage1.Location = new System.Drawing.Point(4, 38);
+            this.tabPage1.Location = new System.Drawing.Point(4, 35);
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Size = new System.Drawing.Size(513, 226);
+            this.tabPage1.Size = new System.Drawing.Size(513, 229);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Home";
             this.tabPage1.VerticalScrollbarBarColor = true;
@@ -295,7 +395,7 @@ namespace VibeBot
             // bRun
             // 
             this.bRun.Image = null;
-            this.bRun.Location = new System.Drawing.Point(385, 197);
+            this.bRun.Location = new System.Drawing.Point(385, 191);
             this.bRun.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.bRun.Name = "bRun";
             this.bRun.Size = new System.Drawing.Size(103, 23);
@@ -339,19 +439,86 @@ namespace VibeBot
             this.lPath.TabIndex = 25;
             this.lPath.Text = "Get files from:";
             // 
+            // tbState
+            // 
+            this.tbState.BackColor = System.Drawing.Color.White;
+            this.tbState.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.tbState.Enabled = false;
+            this.tbState.ForeColor = System.Drawing.Color.White;
+            this.tbState.Location = new System.Drawing.Point(3, 207);
+            this.tbState.Name = "tbState";
+            this.tbState.ShortcutsEnabled = false;
+            this.tbState.Size = new System.Drawing.Size(387, 13);
+            this.tbState.TabIndex = 34;
+            this.tbState.Text = "Info:";
+            // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.bGear);
+            this.tabPage2.Controls.Add(this.pictureBox2);
+            this.tabPage2.Controls.Add(this.gridAnalyze);
+            this.tabPage2.Controls.Add(this.tbAnaStatus);
             this.tabPage2.HorizontalScrollbarBarColor = true;
             this.tabPage2.HorizontalScrollbarHighlightOnWheel = false;
             this.tabPage2.HorizontalScrollbarSize = 10;
-            this.tabPage2.Location = new System.Drawing.Point(4, 38);
+            this.tabPage2.Location = new System.Drawing.Point(4, 35);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Size = new System.Drawing.Size(513, 226);
+            this.tabPage2.Size = new System.Drawing.Size(513, 229);
             this.tabPage2.TabIndex = 2;
             this.tabPage2.Text = "Analyze";
             this.tabPage2.VerticalScrollbarBarColor = true;
             this.tabPage2.VerticalScrollbarHighlightOnWheel = false;
             this.tabPage2.VerticalScrollbarSize = 10;
+            // 
+            // pictureBox2
+            // 
+            this.pictureBox2.Image = global::VibeBot.Properties.Resources.load;
+            this.pictureBox2.Location = new System.Drawing.Point(128, -80);
+            this.pictureBox2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(33, 32);
+            this.pictureBox2.TabIndex = 17;
+            this.pictureBox2.TabStop = false;
+            this.pictureBox2.WaitOnLoad = true;
+            // 
+            // tbAnaStatus
+            // 
+            this.tbAnaStatus.BackColor = System.Drawing.SystemColors.Window;
+            // 
+            // 
+            // 
+            this.tbAnaStatus.CustomButton.FlatAppearance.BorderColor = System.Drawing.Color.MediumBlue;
+            this.tbAnaStatus.CustomButton.Image = null;
+            this.tbAnaStatus.CustomButton.Location = new System.Drawing.Point(494, 1);
+            this.tbAnaStatus.CustomButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.tbAnaStatus.CustomButton.Name = "";
+            this.tbAnaStatus.CustomButton.Size = new System.Drawing.Size(37, 37);
+            this.tbAnaStatus.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
+            this.tbAnaStatus.CustomButton.TabIndex = 1;
+            this.tbAnaStatus.CustomButton.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.tbAnaStatus.CustomButton.Theme = MetroFramework.MetroThemeStyle.Light;
+            this.tbAnaStatus.CustomButton.UseSelectable = true;
+            this.tbAnaStatus.CustomButton.Visible = false;
+            this.tbAnaStatus.Enabled = false;
+            this.tbAnaStatus.ForeColor = System.Drawing.Color.Black;
+            this.tbAnaStatus.Lines = new string[] {
+        "   Analyze track gain"};
+            this.tbAnaStatus.Location = new System.Drawing.Point(-5, 205);
+            this.tbAnaStatus.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.tbAnaStatus.MaxLength = 32767;
+            this.tbAnaStatus.Name = "tbAnaStatus";
+            this.tbAnaStatus.PasswordChar = '\0';
+            this.tbAnaStatus.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.tbAnaStatus.SelectedText = "";
+            this.tbAnaStatus.SelectionLength = 0;
+            this.tbAnaStatus.SelectionStart = 0;
+            this.tbAnaStatus.ShortcutsEnabled = true;
+            this.tbAnaStatus.Size = new System.Drawing.Size(532, 39);
+            this.tbAnaStatus.TabIndex = 15;
+            this.tbAnaStatus.Text = "   Analyze track gain";
+            this.tbAnaStatus.UseSelectable = true;
+            this.tbAnaStatus.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
+            this.tbAnaStatus.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
             // 
             // tabPage3
             // 
@@ -374,13 +541,12 @@ namespace VibeBot
             // 
             this.tbAbout.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.tbAbout.ForeColor = System.Drawing.Color.DimGray;
-            this.tbAbout.Location = new System.Drawing.Point(6, 15);
+            this.tbAbout.Location = new System.Drawing.Point(6, 6);
             this.tbAbout.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tbAbout.Multiline = true;
             this.tbAbout.Name = "tbAbout";
             this.tbAbout.Size = new System.Drawing.Size(504, 184);
             this.tbAbout.TabIndex = 36;
-            this.tbAbout.Text = resources.GetString("tbAbout.Text");
             // 
             // bDeutsch
             // 
@@ -408,19 +574,12 @@ namespace VibeBot
             this.bEnglish.UseVisualStyleBackColor = true;
             this.bEnglish.Click += new System.EventHandler(this.bEngClick);
             // 
-            // pictureBox
+            // bAnalyze
             // 
-            this.pictureBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.pictureBox.ErrorImage = global::VibeBot.Properties.Resources.Background;
-            this.pictureBox.ImageLocation = "VibeBot.Properties.Resources.Background";
-            this.pictureBox.InitialImage = global::VibeBot.Properties.Resources.Background;
-            this.pictureBox.Location = new System.Drawing.Point(-430, 49);
-            this.pictureBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.pictureBox.Name = "pictureBox";
-            this.pictureBox.Size = new System.Drawing.Size(750, 10);
-            this.pictureBox.TabIndex = 35;
-            this.pictureBox.TabStop = false;
-            this.tooltip.SetToolTip(this.pictureBox, "Show analysation");
+            this.bAnalyze.Location = new System.Drawing.Point(0, 0);
+            this.bAnalyze.Name = "bAnalyze";
+            this.bAnalyze.Size = new System.Drawing.Size(75, 23);
+            this.bAnalyze.TabIndex = 0;
             // 
             // VibeBot
             // 
@@ -428,7 +587,7 @@ namespace VibeBot
             this.ClientSize = new System.Drawing.Size(511, 316);
             this.Controls.Add(this.pictureBox);
             this.Controls.Add(this.pLoad);
-            this.Controls.Add(this.tapControl);
+            this.Controls.Add(this.tabControl);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.pGear);
             this.Controls.Add(this.pComplete);
@@ -441,14 +600,17 @@ namespace VibeBot
             this.Text = "VibeBot";
             ((System.ComponentModel.ISupportInitialize)(this.pLoad)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pGear)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gridAnalyze)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pComplete)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            this.tapControl.ResumeLayout(false);
+            this.tabControl.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
+            this.tabPage2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -460,7 +622,7 @@ namespace VibeBot
         private FolderBrowserDialog folderBrowser;
         private PictureBox pGear;
         private PictureBox pictureBox1;
-        private MetroFramework.Controls.MetroTabControl tapControl;
+        private MetroFramework.Controls.MetroTabControl tabControl;
         private MetroFramework.Controls.MetroTabPage tabPage1;
         private MetroFramework.Controls.MetroTextBox.MetroTextButton bSearchPath;
         private MetroFramework.Controls.MetroTextBox.MetroTextButton bRun;
@@ -471,13 +633,19 @@ namespace VibeBot
         private Label ldB;
         private Label lPath;
         private MetroFramework.Controls.MetroTextBox tbdB;
-        public MetroFramework.Controls.MetroTextBox tbPath;
+        public  MetroFramework.Controls.MetroTextBox tbPath;
         private MetroFramework.Controls.MetroTabPage tabPage3;
         private MetroFramework.Controls.MetroTextBox.MetroTextButton bDeutsch;
         private MetroFramework.Controls.MetroTextBox.MetroTextButton bEnglish;
         private MetroFramework.Controls.MetroTabPage tabPage2;
         private TextBox tbAbout;
         private PictureBox pictureBox;
+        private Button bGear;
+        private Button bAnalyze;
+        private PictureBox pictureBox2;
+        private MetroFramework.Controls.MetroGrid gridAnalyze;
+        private MetroFramework.Controls.MetroTextBox tbAnaStatus;
+        private System.Windows.Forms.TextBox tbState;
     }
 }
 
