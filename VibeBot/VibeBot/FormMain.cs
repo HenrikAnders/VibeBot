@@ -16,6 +16,7 @@ namespace VibeBot
     public partial class VibeBot : MetroForm
     {
         Bot bot;
+        bool singleFile = false;
         public VibeBot()
         {
             InitializeComponent();
@@ -26,57 +27,57 @@ namespace VibeBot
             tbdB.Text = "6";
             pComplete.Visible = false;
             this.MaximizeBox = false;
-            fillGrid(false);  //should wait until method is finished, but constructor can´t be asynch   
+         //   fillGrid(false);  //should wait until method is finished, but constructor can´t be asynch   
             tbAbout.Text = "About VibeBot \r\nThis program convert stereo wave files to stereo mp3 files.\r\nFiles are encoded with the samplerate of 44100 Hz (44.1kHz)\r\nThe result are 320kBits/s high quality audio files. The convertetd files\r\nwill be normalized at the given value, without any loss of data.\r\nAfter that, track artist and title is written into the metadata.\r\nThis is called tagging. Tagging will only be succsessfully, if the filename is in the required synthax.\r\nFor example: Dj Reverb - Hydra\r\n'Dj Reverb' is the artist and 'Hydra' the title, the elements \r\nare seperated by a hyphen. Keep the right order.";
             tabControl.SelectedTab = tabPage1;
             tabControl.DisableTab(tabempty);
         }
 
-        private void Path_Click(object sender, EventArgs e)
-        {
-            pComplete.Visible = false;
-            tbPath.Text = "";
-            resetStatus();
-        }
-
         private async void bRun_Click_1(object sender, EventArgs e)
         {
-            if (Directory.GetFiles(setPath(), "*.wav").Length == 0 && Directory.GetFiles(setPath(), "*.mp3").Length == 0)
+            if (validate())
             {
-                MetroMessageBox.Show(this, "No files found on the given path!     Make sure that there are wave or mp3 files!", "");
+                if (!singleFile)
+                {
+                    if (Directory.GetFiles(this.tbPath.Text, "*.wav").Length == 0 && Directory.GetFiles(this.tbPath.Text, "*.mp3").Length == 0)
+                    {
+                        MetroMessageBox.Show(this, "No files found on the given path!     Make sure that there are wave or mp3 files!", "");
+                    }
+                }
+                else
+                {
+                    resetStatus();
+                    tbdB.Enabled = false;
+                    tbPath.Enabled = false;
+                    cbDelete.Enabled = false;
+                    cbReset.Enabled = false;
+                    pComplete.Visible = false;
+                    tbState.Text = "";
+
+                    bot = new Bot(setPath(tbPath.Text));
+                    tbState.AppendText("Info:");
+
+                    pLoad.Visible = true;
+                    await Task.Run(() => bot.convert(cbDelete.Checked));
+                    tbState.AppendText(" Converted \u221A, ");
+
+                    await Task.Run(() => bot.normazize(float.Parse(tbdB.Text, CultureInfo.InvariantCulture.NumberFormat), cbReset.Checked));
+                    tbState.AppendText("normalized \u221A");
+
+                    await Task.Run(() => bot.tagging());
+                    tbState.AppendText(", tagged \u221A");
+
+                    tbState.ForeColor = System.Drawing.Color.Blue;
+                    pLoad.Visible = false;
+                    pComplete.Visible = true;
+
+                    tbdB.Enabled = true;
+                    tbPath.Enabled = true;
+                    cbDelete.Enabled = true;
+                    cbReset.Enabled = true;
+                }
             }
-            else
-            {
-                resetStatus();
-                tbdB.Enabled = false;
-                tbPath.Enabled = false;
-                cbDelete.Enabled = false;
-                cbReset.Enabled = false;
-                pComplete.Visible = false;
-                tbState.Text = "";
-
-                bot = new Bot(setPath());
-                tbState.AppendText("Info:");
-
-                pLoad.Visible = true;
-                await Task.Run(() => bot.convert(cbDelete.Checked));
-                tbState.AppendText(" Converted \u221A, ");
-
-                await Task.Run(() => bot.normazize(float.Parse(tbdB.Text, CultureInfo.InvariantCulture.NumberFormat), cbReset.Checked));
-                tbState.AppendText("normalized \u221A");
-
-                await Task.Run(() => bot.tagging());
-                tbState.AppendText(", tagged \u221A");
-
-                tbState.ForeColor = System.Drawing.Color.Blue;
-                pLoad.Visible = false;
-                pComplete.Visible = true;
-
-                tbdB.Enabled = true;
-                tbPath.Enabled = true;
-                cbDelete.Enabled = true;
-                cbReset.Enabled = true;
-            }
+            else { MetroMessageBox.Show(this, "No mp3/wav files found on the given path!", ""); }
         }
 
         /// <summary>
@@ -90,7 +91,7 @@ namespace VibeBot
             if (reg.GetValueNames().Contains("VibeBotPath"))
             {   //if key exists--> get value
                 regPath = (string)reg.GetValue("VibeBotPath");
-            }
+            }    
             return regPath;
         }
 
@@ -98,16 +99,21 @@ namespace VibeBot
         /// get path from textbox if registry is empty
         /// </summary>
         /// <returns></returns>
-        public String setPath()
+        public String setPath(String path)
         {
             RegistryKey reg = Registry.CurrentUser;
             String regPath = "";
             try
             {
-                if (!string.IsNullOrEmpty(this.tbPath.Text) && Directory.Exists(this.tbPath.Text) && !Directory.GetAccessControl(this.tbPath.Text).AreAccessRulesProtected)
+                if (!string.IsNullOrEmpty(path) && Directory.Exists(path) && !Directory.GetAccessControl(path).AreAccessRulesProtected)
                 {
                     //create the registry key with value path
-                    reg = Registry.CurrentUser;
+               //     reg = Registry.CurrentUser;
+                    regPath = tbPath.Text;
+                    reg.SetValue("VibeBotPath", tbPath.Text);
+                }
+                else if (singleFile && !File.GetAccessControl(path).AreAccessRulesProtected && !string.IsNullOrEmpty(path))
+                {
                     regPath = tbPath.Text;
                     reg.SetValue("VibeBotPath", tbPath.Text);
                 }
@@ -134,7 +140,19 @@ namespace VibeBot
         /// <returns></returns>
         private bool validate()
         {
-            bool bPath = !string.IsNullOrEmpty(this.tbPath.Text) && Directory.Exists(this.tbPath.Text) && !Directory.GetAccessControl(this.tbPath.Text).AreAccessRulesProtected;
+            bool bPath = false;
+            if ((this.tbPath.Text.Contains(".mp3") || this.tbPath.Text.Contains(".wav"))&& File.Exists(this.tbPath.Text))     //check if single file
+            {
+                bPath = !File.GetAccessControl(this.tbPath.Text).AreAccessRulesProtected;
+                singleFile = true;
+            }
+            else
+            {
+                bPath = !string.IsNullOrEmpty(this.tbPath.Text) && Directory.Exists(this.tbPath.Text) && !Directory.GetAccessControl(this.tbPath.Text).AreAccessRulesProtected;
+                singleFile = false;
+            }
+
+
             bool bDB = !lLevel.Text.Equals("!Invalid input!");
             tbPath.ForeColor = (bPath) ? System.Drawing.Color.Red : System.Drawing.Color.Red;
             return bPath && bDB;
@@ -166,7 +184,7 @@ namespace VibeBot
         }
 
         private void folderBrowserClick(object sender, EventArgs e)
-        {
+        {                                         
             resetStatus();
             pComplete.Visible = false;
             if (folderBrowser.ShowDialog() == DialogResult.OK)
@@ -174,6 +192,7 @@ namespace VibeBot
                 tbPath.Text = folderBrowser.SelectedPath;
             }
         }
+
         private void cbResetChecked(object sender, EventArgs e)
         {
             resetStatus();
@@ -241,24 +260,23 @@ namespace VibeBot
             DataRow row;
             dt.Columns.Add("Track");
             dt.Columns.Add("Gain");
-            bot = new Bot(setPath());
-            foreach (KeyValuePair<string, float> kvp in await bot.analyze(setPath(), reanalyze))
+            if (validate())
             {
-                row = dt.NewRow();
-                row["Track"] = kvp.Key;
-                row["Gain"] = (kvp.Value + 87);
-                dt.Rows.Add(row);
+                bot = new Bot(tbPath.Text);
+                foreach (KeyValuePair<string, string> kvp in await bot.analyze(this.tbPath.Text, reanalyze))
+                {
+                    row = dt.NewRow();
+                    row["Track"] = kvp.Key;
+                    if(kvp.Value.Contains("clip!"))
+                        gridAnalyze.DefaultCellStyle.SelectionForeColor = System.Drawing.Color.DarkRed;
+                    row["Gain"] = (kvp.Value);
+                    dt.Rows.Add(row);
+                }                                                                                                         
             }
-            if (!reanalyze)
-            {
-                gridAnalyze.DataSource = dt;
-                gridAnalyze.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill; //adjust header size to overall table
-                gridAnalyze.ColumnHeadersDefaultCellStyle.BackColor = System.Drawing.Color.LightGray;   //headers gray
-                gridAnalyze.ColumnHeadersDefaultCellStyle.ForeColor = System.Drawing.Color.Black;   //header letters black
-                gridAnalyze.EnableHeadersVisualStyles = false;
-                gridAnalyze.RowHeadersVisible = false;
-                gridAnalyze.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader);//optimize cell size
-                pLoad.Visible = false;
+            else {
+                row = dt.NewRow();
+                row["Track"] = " !No files found on the given path! ";
+                dt.Rows.Add(row);
             }
             await Task.Delay(1);
             return dt;
@@ -266,7 +284,8 @@ namespace VibeBot
 
         private async void bReanalyze(object sender, EventArgs e)
         {   //click Listener    
-            //  animation();  //no function...don´t no why       
+            //  animation();  //no function...don´t no why 
+            pComplete.Visible = false;      
             gridAnalyze.Visible = false;
             pLoad.Visible = true;
             gridAnalyze.DataSource = await Task.Run(() => fillGrid(true));
@@ -275,7 +294,8 @@ namespace VibeBot
             gridAnalyze.ColumnHeadersDefaultCellStyle.BackColor = System.Drawing.Color.LightGray;   //headers gray
             gridAnalyze.ColumnHeadersDefaultCellStyle.ForeColor = System.Drawing.Color.Black;   //header letters black
             gridAnalyze.EnableHeadersVisualStyles = false;
-            gridAnalyze.RowHeadersVisible = false;
+            gridAnalyze.RowHeadersVisible = false;    
+            gridAnalyze.CellBorderStyle = DataGridViewCellBorderStyle.RaisedVertical;
             gridAnalyze.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader);//optimize cell size
             pLoad.Visible = false;
             gridAnalyze.Visible = true;
@@ -284,7 +304,7 @@ namespace VibeBot
 
         private void deleteListener(object sender, KeyEventArgs e)
         {   //button "del" listener   KeyPress   
-            bot = new Bot(setPath());
+            bot = new Bot(setPath(this.tbPath.Text));
             if (e.KeyCode == Keys.Delete)
             {
                 foreach (DataGridViewRow item in gridAnalyze.SelectedRows)
@@ -292,6 +312,28 @@ namespace VibeBot
                     bot.deleteSelection(item.Cells["Track"].Value.ToString());
                     gridAnalyze.Rows.RemoveAt(item.Index);
                 }
+            }
+        }
+
+        private void dragEnter(object sender, DragEventArgs e)
+        {    //occours, if user hover with item over tapControl   
+            if (e.Data.GetDataPresent(DataFormats.FileDrop)) {
+                e.Effect = DragDropEffects.Copy;
+            }
+            else
+            {
+                e.Effect = DragDropEffects.None;
+            }
+        }
+
+        private void DropItem(object sender, DragEventArgs e)
+        {     //occours, if user drops Item into tapControl
+            if (e.Data.GetDataPresent(DataFormats.FileDrop)){
+                string[] file = (string[])e.Data.GetData(DataFormats.FileDrop);        
+                FileInfo fileInfo = new FileInfo(file.ElementAt(0));        
+                tbPath.Text = fileInfo.Directory.FullName + @"\" + fileInfo.Name;
+                setPath(fileInfo.Directory.FullName+""+ fileInfo.Name);
+                tbState.Text = fileInfo.Name;
             }
         }
     }

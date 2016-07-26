@@ -22,8 +22,18 @@ namespace VibeBot
         }
 
         public List<String> getFiles()
-        {       
-            return Directory.GetFiles(path).ToList();
+        {
+            List<string> fileList = new List<string>();
+            if (this.path.Contains(".mp3"))     //check if single file
+            {               
+                fileList.Add(path);
+            }
+            else
+            {
+                return Directory.GetFiles(path).ToList();
+            }
+           
+            return fileList;
         }
 
         /// <summary>
@@ -120,12 +130,12 @@ namespace VibeBot
         /// </summary>
         /// <param name="path"></param>
         /// <returns>2D Array first dimension File Name, second dimension gain</returns>
-        public async Task<List<KeyValuePair<String, float>>> analyze(String path, bool reanalyze)
+        public async Task<List<KeyValuePair<String, String>>> analyze(String path, bool reanalyze)
         {
             List<string> files = getFiles();
 
-            float gain = 0;
-            int index = 0; List<KeyValuePair<String, float>> gainValue = new List<KeyValuePair<String, float>>();
+            string gain = "";
+            int index = 0; List<KeyValuePair<String, string>> gainValue = new List<KeyValuePair<String, string>>();
             if (files.Any(str=>str.Contains(".mp3")))      //ony do analyzing if list contains mp3´s
 
             {//get list of analyzed files    
@@ -142,7 +152,7 @@ namespace VibeBot
                     {
                         while ((line = streamFile.ReadLine()) != null)
                         {
-                            gainValue.Insert(index, new KeyValuePair<String, float>(line.Substring(0, line.IndexOf('#') - 1), float.Parse(line.Substring(line.IndexOf('#') + 1))));
+                            gainValue.Insert(index, new KeyValuePair<String, String>(line.Substring(0, line.IndexOf('#') - 1), line.Substring(line.IndexOf('#') + 1)));
                             index++;
                         }
                     }
@@ -172,17 +182,25 @@ namespace VibeBot
                                     string outputLine;
                                     while ((outputLine = p.StandardOutput.ReadLine()) != null)
                                     {    //search inside+ the console output from running process
+                                        Console.Write(outputLine);
                                         if (outputLine.Contains("dB change:"))
                                         {    //write captured data into variable
-                                            gain = float.Parse(outputLine.Substring(32));
+                                            float fgain= float.Parse(outputLine.Substring(32))+87;
+                                            gain = fgain.ToString();
+                                           // break;
+                                        }
+                                        if (outputLine.Contains("clipping"))
+                                        {
+                                            gain = "clip! " + gain;
                                             break;
                                         }
+
                                     }
                                     p.WaitForExit();      
                                     try
                                     {   //write file into keyvalue list
                                         track = Path.GetFileNameWithoutExtension(files.ElementAt(i));
-                                        gainValue.Insert(index, new KeyValuePair<string, float>(track, gain));
+                                        gainValue.Insert(index, new KeyValuePair<string, string>(track, gain));
                                     }
                                     catch
                                     { //no need to implement 
@@ -208,12 +226,11 @@ namespace VibeBot
             }
             else
             {    //write error into list if no mp3 files found
-                gainValue.Insert(0, new KeyValuePair<string, float>("! No files found !",-87));
+                gainValue.Insert(0, new KeyValuePair<string, string>("! No files found !"," "));
             }
             await Task.Delay(1);
             return gainValue;
         }    
-
 
         /// <summary>
         /// get song information and write it into the metadata
