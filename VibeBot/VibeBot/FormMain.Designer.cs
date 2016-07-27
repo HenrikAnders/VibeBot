@@ -60,6 +60,7 @@ namespace VibeBot
             this.lPath = new System.Windows.Forms.Label();
             this.tbState = new System.Windows.Forms.TextBox();
             this.tabPage2 = new MetroFramework.Controls.MetroTabPage();
+            this.pArrow = new System.Windows.Forms.PictureBox();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.tbAnaStatus = new MetroFramework.Controls.MetroTextBox();
             this.tabempty = new MetroFramework.Controls.MetroTabPage();
@@ -68,6 +69,7 @@ namespace VibeBot
             this.bDeutsch = new MetroFramework.Controls.MetroTextBox.MetroTextButton();
             this.bEnglish = new MetroFramework.Controls.MetroTextBox.MetroTextButton();
             this.bAnalyze = new System.Windows.Forms.Button();
+            this.lArrow = new MetroFramework.Controls.MetroLabel();
             ((System.ComponentModel.ISupportInitialize)(this.pLoad)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pGear)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
@@ -77,6 +79,7 @@ namespace VibeBot
             this.tabControl.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pArrow)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.tabPage3.SuspendLayout();
             this.SuspendLayout();
@@ -370,7 +373,7 @@ namespace VibeBot
             this.tabControl.Multiline = true;
             this.tabControl.Name = "tabControl";
             this.tabControl.RightToLeftLayout = true;
-            this.tabControl.SelectedIndex = 0;
+            this.tabControl.SelectedIndex = 1;
             this.tabControl.ShowToolTips = true;
             this.tabControl.Size = new System.Drawing.Size(521, 268);
             this.tabControl.Style = MetroFramework.MetroColorStyle.Blue;
@@ -398,9 +401,9 @@ namespace VibeBot
             this.tabPage1.HorizontalScrollbarBarColor = true;
             this.tabPage1.HorizontalScrollbarHighlightOnWheel = false;
             this.tabPage1.HorizontalScrollbarSize = 10;
-            this.tabPage1.Location = new System.Drawing.Point(4, 41);
+            this.tabPage1.Location = new System.Drawing.Point(4, 75);
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Size = new System.Drawing.Size(513, 223);
+            this.tabPage1.Size = new System.Drawing.Size(513, 189);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Home";
             this.tabPage1.VerticalScrollbarBarColor = true;
@@ -474,6 +477,8 @@ namespace VibeBot
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.lArrow);
+            this.tabPage2.Controls.Add(this.pArrow);
             this.tabPage2.Controls.Add(this.gridAnalyze);
             this.tabPage2.Controls.Add(this.bGear);
             this.tabPage2.Controls.Add(this.pictureBox2);
@@ -482,15 +487,24 @@ namespace VibeBot
             this.tabPage2.HorizontalScrollbarBarColor = true;
             this.tabPage2.HorizontalScrollbarHighlightOnWheel = false;
             this.tabPage2.HorizontalScrollbarSize = 10;
-            this.tabPage2.Location = new System.Drawing.Point(4, 75);
+            this.tabPage2.Location = new System.Drawing.Point(4, 41);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Size = new System.Drawing.Size(513, 189);
+            this.tabPage2.Size = new System.Drawing.Size(513, 223);
             this.tabPage2.TabIndex = 2;
             this.tabPage2.Text = "Analyze";
             this.tabPage2.ToolTipText = "Analyze Track Gain";
             this.tabPage2.VerticalScrollbarBarColor = true;
             this.tabPage2.VerticalScrollbarHighlightOnWheel = false;
             this.tabPage2.VerticalScrollbarSize = 10;
+            // 
+            // pArrow
+            // 
+            this.pArrow.Image = global::VibeBot.Properties.Resources.arrow;
+            this.pArrow.Location = new System.Drawing.Point(265, 116);
+            this.pArrow.Name = "pArrow";
+            this.pArrow.Size = new System.Drawing.Size(145, 36);
+            this.pArrow.TabIndex = 19;
+            this.pArrow.TabStop = false;
             // 
             // pictureBox2
             // 
@@ -624,6 +638,15 @@ namespace VibeBot
             this.bAnalyze.Size = new System.Drawing.Size(75, 23);
             this.bAnalyze.TabIndex = 0;
             // 
+            // lArrow
+            // 
+            this.lArrow.AutoSize = true;
+            this.lArrow.Location = new System.Drawing.Point(258, 126);
+            this.lArrow.Name = "lArrow";
+            this.lArrow.Size = new System.Drawing.Size(109, 19);
+            this.lArrow.TabIndex = 20;
+            this.lArrow.Text = "Klick to reanalyze";
+            // 
             // VibeBot
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -652,6 +675,8 @@ namespace VibeBot
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
             this.tabPage2.ResumeLayout(false);
+            this.tabPage2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pArrow)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
@@ -691,6 +716,8 @@ namespace VibeBot
         private MetroFramework.Controls.MetroTextBox tbAnaStatus;
         private System.Windows.Forms.TextBox tbState;
         private MetroFramework.Controls.MetroTabPage tabempty;
+        private PictureBox pArrow;
+        private MetroFramework.Controls.MetroLabel lArrow;
     }
 }
 

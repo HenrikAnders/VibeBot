@@ -123,6 +123,7 @@
   <ItemGroup>
     <Content Include="FodyWeavers.xml" />
     <Content Include="icon.ico" />
+    <None Include="Recources\arrow.JPG" />
     <Content Include="Recources\Complete.jpg" />
     <Content Include="Recources\gear.jpg" />
     <None Include="Recources\questionMark.JPG" />

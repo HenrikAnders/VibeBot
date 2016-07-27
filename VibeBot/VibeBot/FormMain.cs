@@ -37,7 +37,7 @@ namespace VibeBot
         {
             if (validate())
             {
-                if (!singleFile)
+                if (singleFile)
                 {
                     if (Directory.GetFiles(this.tbPath.Text, "*.wav").Length == 0 && Directory.GetFiles(this.tbPath.Text, "*.mp3").Length == 0)
                     {
@@ -267,13 +267,20 @@ namespace VibeBot
                 {
                     row = dt.NewRow();
                     row["Track"] = kvp.Key;
-                    if(kvp.Value.Contains("clip!"))
-                        gridAnalyze.DefaultCellStyle.SelectionForeColor = System.Drawing.Color.DarkRed;
-                    row["Gain"] = (kvp.Value);
-                    dt.Rows.Add(row);
-                }                                                                                                         
+                    if (kvp.Value.Contains("!"))
+                    {
+                        gridAnalyze.DefaultCellStyle.ForeColor = System.Drawing.Color.DarkRed;
+                        row["Gain"] = kvp.Value.Remove(0, 1);   //delete the char '!'
+                    }
+                    else
+                    {
+                        row["Gain"] = (kvp.Value);
+                    }             
+                    dt.Rows.Add(row); 
+                }
             }
-            else {
+            else
+            {
                 row = dt.NewRow();
                 row["Track"] = " !No files found on the given path! ";
                 dt.Rows.Add(row);
@@ -286,13 +293,17 @@ namespace VibeBot
         {   //click Listener    
             //  animation();  //no function...don´t no why 
             pComplete.Visible = false;      
-            gridAnalyze.Visible = false;
+            gridAnalyze.Visible = false;         
+            lArrow.Visible = false;
+            pArrow.Visible = false;
             pLoad.Visible = true;
             gridAnalyze.DataSource = await Task.Run(() => fillGrid(true));
             //do all GridView stuff in here because from other Task is no access to gridview
             gridAnalyze.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;//adjust header size to overall table   
             gridAnalyze.ColumnHeadersDefaultCellStyle.BackColor = System.Drawing.Color.LightGray;   //headers gray
             gridAnalyze.ColumnHeadersDefaultCellStyle.ForeColor = System.Drawing.Color.Black;   //header letters black
+            this.gridAnalyze.DefaultCellStyle.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(250)))), ((int)(((byte)(255)))));
+            this.gridAnalyze.DefaultCellStyle.SelectionForeColor = gridAnalyze.DefaultCellStyle.ForeColor;
             gridAnalyze.EnableHeadersVisualStyles = false;
             gridAnalyze.RowHeadersVisible = false;    
             gridAnalyze.CellBorderStyle = DataGridViewCellBorderStyle.RaisedVertical;
