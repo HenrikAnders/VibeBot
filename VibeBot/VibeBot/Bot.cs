@@ -18,6 +18,7 @@ namespace VibeBot
         private String path = "";
         List<string> lMp3Files = new List<string>();
         List<string> lWavFiles = new List<string>();
+        bool singleFile = false;
         public Bot(String path)
         {
             this.path = path;
@@ -30,8 +31,9 @@ namespace VibeBot
             if (this.path.Contains(".mp3"))     //check if single file
             {
                 lMp3Files.Add(path);
+                singleFile = true;
             }
-            else
+            else if(!singleFile && Directory.GetFiles(path).Where(s => (s.Contains(".mp3"))).Count() != 0)
             {
                 lMp3Files.AddRange( Directory.GetFiles(path).ToList().Where(s=>(s.Contains(".mp3"))));//get all mp3 files from path
             }
@@ -41,8 +43,9 @@ namespace VibeBot
             if (this.path.Contains(".wav"))     //check if single file
             {
                 lWavFiles.Add(path);
+                singleFile = true;
             }
-            else
+            else if (!singleFile && Directory.GetFiles(path).Where(s => (s.Contains(".wav"))).Count() !=0)
             {
                 lWavFiles.AddRange(Directory.GetFiles(path).ToList().Where(s => (s.Contains(".wav"))));//get all mp3 files from path
             }
@@ -51,7 +54,7 @@ namespace VibeBot
         /// <summary>
         /// use lame to convert from wave to mp3
         /// </summary>
-        public async void convert(bool deleteFile)
+        public void convert(bool deleteFile)
         {
             foreach (var file in lWavFiles)
             {
@@ -73,14 +76,13 @@ namespace VibeBot
                 {
                     MetroMessageBox.Show(Form.ActiveForm, file + " is used in another programm, or is not a .wav file", "Convert Error");
                 }
-            }
-            await Task.Delay(1);
+            }                       
         }
 
         /// <summary>
         /// set the amplitude to given value
         /// </summary>
-        public async void normazize(float db, bool reset)
+        public  void normalyze(float db, bool reset)
         {
             foreach (string file in lMp3Files)
             {  
@@ -127,7 +129,7 @@ namespace VibeBot
                             }
                     }   
             }
-            await Task.Delay(1);
+          //  await Task.Delay(1);
         }
 
         /// <summary>
@@ -135,7 +137,7 @@ namespace VibeBot
         /// </summary>
         /// <param name="path"></param>
         /// <returns>2D Array first dimension File Name, second dimension gain</returns>
-        public async Task<List<KeyValuePair<String, String>>> analyze(String path, bool reanalyze)
+        public  List<KeyValuePair<String, String>> analyze(String path, bool reanalyze)
         {
          
 
@@ -228,15 +230,14 @@ namespace VibeBot
             else
             {    //write error into list if no mp3 files found
                 gainValue.Insert(0, new KeyValuePair<string, string>("! No files found !"," "));
-            }
-            await Task.Delay(1);
+            }                          
             return gainValue;
         }    
 
         /// <summary>
         /// get song information and write it into the metadata
         /// </summary>
-        public async void tagging()
+        public void tagging()
         {
             foreach (var file in lMp3Files)
             {
@@ -253,8 +254,7 @@ namespace VibeBot
                 {
                     MetroMessageBox.Show(Form.ActiveForm, fileName.Substring(fileName.IndexOf("-") + 1) + "\r\nFile format must be like: artist - title ", "Tagging error");
                 }
-            }
-            await Task.Delay(1);
+            }                      
         }
 
         public void deleteSelection(String element) {     

@@ -27,7 +27,7 @@ namespace VibeBot
             tbdB.Text = "6";
             pComplete.Visible = false;
             this.MaximizeBox = false;
-         //   fillGrid(false);  //should wait until method is finished, but constructor can´t be asynch   
+            //   fillGrid(false);  //should wait until method is finished, but constructor can´t be asynch   
             tbAbout.Text = "About VibeBot \r\nThis program convert stereo wave files to stereo mp3 files.\r\nFiles are encoded with the samplerate of 44100 Hz (44.1kHz)\r\nThe result are 320kBits/s high quality audio files. The convertetd files\r\nwill be normalized at the given value, without any loss of data.\r\nAfter that, track artist and title is written into the metadata.\r\nThis is called tagging. Tagging will only be succsessfully, if the filename is in the required synthax.\r\nFor example: Dj Reverb - Hydra\r\n'Dj Reverb' is the artist and 'Hydra' the title, the elements \r\nare seperated by a hyphen. Keep the right order.";
             tabControl.SelectedTab = tabPage1;
             tabControl.DisableTab(tabempty);
@@ -37,12 +37,10 @@ namespace VibeBot
         {
             if (validate())
             {
-                if (singleFile)
+
+                if (!singleFile && Directory.GetFiles(this.tbPath.Text, "*.wav").Length == 0 && Directory.GetFiles(this.tbPath.Text, "*.mp3").Length == 0)
                 {
-                    if (Directory.GetFiles(this.tbPath.Text, "*.wav").Length == 0 && Directory.GetFiles(this.tbPath.Text, "*.mp3").Length == 0)
-                    {
-                        MetroMessageBox.Show(this, "No files found on the given path!     Make sure that there are wave or mp3 files!", "");
-                    }
+                    MetroMessageBox.Show(this, "No mp3/wav files found on the given path", "");
                 }
                 else
                 {
@@ -61,7 +59,7 @@ namespace VibeBot
                     await Task.Run(() => bot.convert(cbDelete.Checked));
                     tbState.AppendText(" Converted \u221A, ");
 
-                    await Task.Run(() => bot.normazize(float.Parse(tbdB.Text, CultureInfo.InvariantCulture.NumberFormat), cbReset.Checked));
+                    await Task.Run(() => bot.normalyze(float.Parse(tbdB.Text, CultureInfo.InvariantCulture.NumberFormat), cbReset.Checked));
                     tbState.AppendText("normalized \u221A");
 
                     await Task.Run(() => bot.tagging());
@@ -91,7 +89,7 @@ namespace VibeBot
             if (reg.GetValueNames().Contains("VibeBotPath"))
             {   //if key exists--> get value
                 regPath = (string)reg.GetValue("VibeBotPath");
-            }    
+            }
             return regPath;
         }
 
@@ -105,14 +103,14 @@ namespace VibeBot
             String regPath = "";
             try
             {
-                if (!string.IsNullOrEmpty(path) && Directory.Exists(path) && !Directory.GetAccessControl(path).AreAccessRulesProtected)
+                if (!string.IsNullOrEmpty(path) && !singleFile)
                 {
                     //create the registry key with value path
-               //     reg = Registry.CurrentUser;
+                    //reg = Registry.CurrentUser;
                     regPath = tbPath.Text;
                     reg.SetValue("VibeBotPath", tbPath.Text);
                 }
-                else if (singleFile && !File.GetAccessControl(path).AreAccessRulesProtected && !string.IsNullOrEmpty(path))
+                else if (singleFile && !string.IsNullOrEmpty(path))
                 {
                     regPath = tbPath.Text;
                     reg.SetValue("VibeBotPath", tbPath.Text);
@@ -122,7 +120,9 @@ namespace VibeBot
                     MetroMessageBox.Show(ActiveForm, "Access to the given path is denied", "");
                 }
             }
-            catch { }
+            catch (Exception e) {
+                Console.Write(e.Message);
+            }
             finally
             {
                 if (reg != null)
@@ -141,7 +141,7 @@ namespace VibeBot
         private bool validate()
         {
             bool bPath = false;
-            if ((this.tbPath.Text.Contains(".mp3") || this.tbPath.Text.Contains(".wav"))&& File.Exists(this.tbPath.Text))     //check if single file
+            if ((this.tbPath.Text.Contains(".mp3") || this.tbPath.Text.Contains(".wav")) && File.Exists(this.tbPath.Text))     //check if single file
             {
                 bPath = !File.GetAccessControl(this.tbPath.Text).AreAccessRulesProtected;
                 singleFile = true;
@@ -170,8 +170,8 @@ namespace VibeBot
             pComplete.Visible = false;
             lLevel.ForeColor = System.Drawing.Color.Black;
             try
-            {     //if it´s not a number show "Invalid input"
-                double level = float.Parse(tbdB.Text, CultureInfo.InvariantCulture.NumberFormat) + 89;
+            {     //if it´s not a positive number show "Invalid input"
+                uint level = uint.Parse(tbdB.Text, CultureInfo.InvariantCulture.NumberFormat) + 89;
                 lLevel.ForeColor = System.Drawing.Color.Gray;
                 lLevel.Text = "Output level -> " + level + " dB";
             }
@@ -184,7 +184,7 @@ namespace VibeBot
         }
 
         private void folderBrowserClick(object sender, EventArgs e)
-        {                                         
+        {
             resetStatus();
             pComplete.Visible = false;
             if (folderBrowser.ShowDialog() == DialogResult.OK)
@@ -254,16 +254,16 @@ namespace VibeBot
         /// fill the dataGridView
         /// </summary>
         /// <param name="reanalyze">indicates whether the values have to be recalculated</param>
-        private async Task<DataTable> fillGrid(bool reanalyze)
+        private  DataTable fillGrid(bool reanalyze)
         {
             DataTable dt = new DataTable();
             DataRow row;
             dt.Columns.Add("Track");
-            dt.Columns.Add("Gain");
+            dt.Columns.Add("Gain");      
             if (validate())
             {
                 bot = new Bot(tbPath.Text);
-                foreach (KeyValuePair<string, string> kvp in await bot.analyze(this.tbPath.Text, reanalyze))
+                foreach (KeyValuePair<string, string> kvp in bot.analyze(this.tbPath.Text, reanalyze))
                 {
                     row = dt.NewRow();
                     row["Track"] = kvp.Key;
@@ -275,8 +275,8 @@ namespace VibeBot
                     else
                     {
                         row["Gain"] = (kvp.Value);
-                    }             
-                    dt.Rows.Add(row); 
+                    }
+                    dt.Rows.Add(row);        
                 }
             }
             else
@@ -284,20 +284,21 @@ namespace VibeBot
                 row = dt.NewRow();
                 row["Track"] = " !No files found on the given path! ";
                 dt.Rows.Add(row);
-            }
-            await Task.Delay(1);
+            }                                      
             return dt;
         }
 
         private async void bReanalyze(object sender, EventArgs e)
         {   //click Listener    
             //  animation();  //no function...don´t no why 
-            pComplete.Visible = false;      
-            gridAnalyze.Visible = false;         
+            pComplete.Visible = false;
+            gridAnalyze.Visible = false;
             lArrow.Visible = false;
             pArrow.Visible = false;
+            tbAnaStatus.Text = "";
             pLoad.Visible = true;
             gridAnalyze.DataSource = await Task.Run(() => fillGrid(true));
+            tbAnaStatus.Text = gridAnalyze.RowCount<=1? "  " + gridAnalyze.RowCount + " entry": "  " + gridAnalyze.RowCount + " entries";
             //do all GridView stuff in here because from other Task is no access to gridview
             gridAnalyze.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;//adjust header size to overall table   
             gridAnalyze.ColumnHeadersDefaultCellStyle.BackColor = System.Drawing.Color.LightGray;   //headers gray
@@ -305,11 +306,12 @@ namespace VibeBot
             this.gridAnalyze.DefaultCellStyle.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(250)))), ((int)(((byte)(255)))));
             this.gridAnalyze.DefaultCellStyle.SelectionForeColor = gridAnalyze.DefaultCellStyle.ForeColor;
             gridAnalyze.EnableHeadersVisualStyles = false;
-            gridAnalyze.RowHeadersVisible = false;    
+            gridAnalyze.RowHeadersVisible = false;
             gridAnalyze.CellBorderStyle = DataGridViewCellBorderStyle.RaisedVertical;
             gridAnalyze.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader);//optimize cell size
-            pLoad.Visible = false;
+            pLoad.Visible = false;        
             gridAnalyze.Visible = true;
+            gridAnalyze.FirstDisplayedScrollingRowIndex = 1; //workaround to show the scrollpane correctly
             // tbState.SendToBack();
         }
 
@@ -339,13 +341,19 @@ namespace VibeBot
 
         private void DropItem(object sender, DragEventArgs e)
         {     //occours, if user drops Item into tapControl
-            if (e.Data.GetDataPresent(DataFormats.FileDrop)){
-                string[] file = (string[])e.Data.GetData(DataFormats.FileDrop);        
-                FileInfo fileInfo = new FileInfo(file.ElementAt(0));        
+            if (e.Data.GetDataPresent(DataFormats.FileDrop)) {
+                string[] file = (string[])e.Data.GetData(DataFormats.FileDrop);
+                FileInfo fileInfo = new FileInfo(file.ElementAt(0));
                 tbPath.Text = fileInfo.Directory.FullName + @"\" + fileInfo.Name;
-                setPath(fileInfo.Directory.FullName+""+ fileInfo.Name);
+                setPath(fileInfo.Directory.FullName + "" + fileInfo.Name);
                 tbState.Text = fileInfo.Name;
             }
         }
-    }
+
+        private void enterPress(object sender, KeyEventArgs e)
+        {
+            if (e.KeyValue == 13 && tabControl.SelectedTab== tabPage1)
+                bRun_Click_1(null, null);
+        }           
+    } 
 }

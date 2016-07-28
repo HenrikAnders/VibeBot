@@ -34,9 +34,9 @@ namespace VibeBot
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(VibeBot));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             this.pLoad = new System.Windows.Forms.PictureBox();
             this.tooltip = new System.Windows.Forms.ToolTip(this.components);
             this.pGear = new System.Windows.Forms.PictureBox();
@@ -60,6 +60,7 @@ namespace VibeBot
             this.lPath = new System.Windows.Forms.Label();
             this.tbState = new System.Windows.Forms.TextBox();
             this.tabPage2 = new MetroFramework.Controls.MetroTabPage();
+            this.lArrow = new MetroFramework.Controls.MetroLabel();
             this.pArrow = new System.Windows.Forms.PictureBox();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.tbAnaStatus = new MetroFramework.Controls.MetroTextBox();
@@ -69,7 +70,6 @@ namespace VibeBot
             this.bDeutsch = new MetroFramework.Controls.MetroTextBox.MetroTextButton();
             this.bEnglish = new MetroFramework.Controls.MetroTextBox.MetroTextButton();
             this.bAnalyze = new System.Windows.Forms.Button();
-            this.lArrow = new MetroFramework.Controls.MetroLabel();
             ((System.ComponentModel.ISupportInitialize)(this.pLoad)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pGear)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
@@ -287,23 +287,23 @@ namespace VibeBot
             this.gridAnalyze.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.None;
             this.gridAnalyze.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableAlwaysIncludeHeaderText;
             this.gridAnalyze.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            dataGridViewCellStyle7.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold);
-            dataGridViewCellStyle7.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
-            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.gridAnalyze.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold);
+            dataGridViewCellStyle4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gridAnalyze.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
             this.gridAnalyze.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle8.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            dataGridViewCellStyle8.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            dataGridViewCellStyle8.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(136)))), ((int)(((byte)(136)))), ((int)(((byte)(136)))));
-            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
-            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.gridAnalyze.DefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            dataGridViewCellStyle5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(136)))), ((int)(((byte)(136)))), ((int)(((byte)(136)))));
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.gridAnalyze.DefaultCellStyle = dataGridViewCellStyle5;
             this.gridAnalyze.EnableHeadersVisualStyles = false;
             this.gridAnalyze.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
             this.gridAnalyze.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
@@ -313,19 +313,19 @@ namespace VibeBot
             this.gridAnalyze.Name = "gridAnalyze";
             this.gridAnalyze.ReadOnly = true;
             this.gridAnalyze.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
-            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle9.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            dataGridViewCellStyle9.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            dataGridViewCellStyle9.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
-            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.gridAnalyze.RowHeadersDefaultCellStyle = dataGridViewCellStyle9;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            dataGridViewCellStyle6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gridAnalyze.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
             this.gridAnalyze.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.gridAnalyze.RowTemplate.Height = 24;
             this.gridAnalyze.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.gridAnalyze.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.gridAnalyze.Size = new System.Drawing.Size(336, 202);
+            this.gridAnalyze.Size = new System.Drawing.Size(367, 202);
             this.gridAnalyze.StandardTab = true;
             this.gridAnalyze.Style = MetroFramework.MetroColorStyle.White;
             this.gridAnalyze.TabIndex = 16;
@@ -383,6 +383,7 @@ namespace VibeBot
             this.tabControl.UseSelectable = true;
             this.tabControl.DragDrop += new System.Windows.Forms.DragEventHandler(this.DropItem);
             this.tabControl.DragEnter += new System.Windows.Forms.DragEventHandler(this.dragEnter);
+            this.tabControl.KeyDown += new System.Windows.Forms.KeyEventHandler(this.enterPress);
             // 
             // tabPage1
             // 
@@ -401,9 +402,9 @@ namespace VibeBot
             this.tabPage1.HorizontalScrollbarBarColor = true;
             this.tabPage1.HorizontalScrollbarHighlightOnWheel = false;
             this.tabPage1.HorizontalScrollbarSize = 10;
-            this.tabPage1.Location = new System.Drawing.Point(4, 75);
+            this.tabPage1.Location = new System.Drawing.Point(4, 41);
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Size = new System.Drawing.Size(513, 189);
+            this.tabPage1.Size = new System.Drawing.Size(513, 223);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Home";
             this.tabPage1.VerticalScrollbarBarColor = true;
@@ -497,6 +498,15 @@ namespace VibeBot
             this.tabPage2.VerticalScrollbarHighlightOnWheel = false;
             this.tabPage2.VerticalScrollbarSize = 10;
             // 
+            // lArrow
+            // 
+            this.lArrow.AutoSize = true;
+            this.lArrow.Location = new System.Drawing.Point(258, 126);
+            this.lArrow.Name = "lArrow";
+            this.lArrow.Size = new System.Drawing.Size(109, 19);
+            this.lArrow.TabIndex = 20;
+            this.lArrow.Text = "Klick to reanalyze";
+            // 
             // pArrow
             // 
             this.pArrow.Image = global::VibeBot.Properties.Resources.arrow;
@@ -537,8 +547,7 @@ namespace VibeBot
             this.tbAnaStatus.CustomButton.Visible = false;
             this.tbAnaStatus.Enabled = false;
             this.tbAnaStatus.ForeColor = System.Drawing.Color.Black;
-            this.tbAnaStatus.Lines = new string[] {
-        "   Analyze track gain"};
+            this.tbAnaStatus.Lines = new string[0];
             this.tbAnaStatus.Location = new System.Drawing.Point(-5, 201);
             this.tbAnaStatus.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tbAnaStatus.MaxLength = 32767;
@@ -551,7 +560,6 @@ namespace VibeBot
             this.tbAnaStatus.ShortcutsEnabled = true;
             this.tbAnaStatus.Size = new System.Drawing.Size(532, 39);
             this.tbAnaStatus.TabIndex = 15;
-            this.tbAnaStatus.Text = "   Analyze track gain";
             this.tbAnaStatus.UseSelectable = true;
             this.tbAnaStatus.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
             this.tbAnaStatus.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
@@ -638,15 +646,6 @@ namespace VibeBot
             this.bAnalyze.Size = new System.Drawing.Size(75, 23);
             this.bAnalyze.TabIndex = 0;
             // 
-            // lArrow
-            // 
-            this.lArrow.AutoSize = true;
-            this.lArrow.Location = new System.Drawing.Point(258, 126);
-            this.lArrow.Name = "lArrow";
-            this.lArrow.Size = new System.Drawing.Size(109, 19);
-            this.lArrow.TabIndex = 20;
-            this.lArrow.Text = "Klick to reanalyze";
-            // 
             // VibeBot
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -664,7 +663,7 @@ namespace VibeBot
             this.Name = "VibeBot";
             this.Padding = new System.Windows.Forms.Padding(20, 74, 20, 20);
             this.Text = "VibeBot";
-            this.DragDrop += new System.Windows.Forms.DragEventHandler(this.DropItem);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.enterPress);
             ((System.ComponentModel.ISupportInitialize)(this.pLoad)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pGear)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
