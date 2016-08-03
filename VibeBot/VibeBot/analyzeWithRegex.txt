@@ -1,0 +1,19 @@
+
+var match=Regex.Match(@"db change:(\d+)?");  //find: db change:<Number>
+if(match.Success)
+{  //need to extrakt the number
+  float outputString = String.Join("", match.Value.Where(Char.IsDigit));    
+}
+
+
+
+
+Explanation:
+db change:(\d+)?
+Select the folowing chars
+
+friends or the Community. Explore your results with Tools. 
+full Reference & Help is available in the Library,     DB CHANGE:19031             or watch the video Tutorial.
+Sample text for testing...
+
+now the numbers have to be extracted with linq->see above (line 4)

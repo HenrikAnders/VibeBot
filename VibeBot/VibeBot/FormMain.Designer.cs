@@ -402,9 +402,9 @@ namespace VibeBot
             this.tabPage1.HorizontalScrollbarBarColor = true;
             this.tabPage1.HorizontalScrollbarHighlightOnWheel = false;
             this.tabPage1.HorizontalScrollbarSize = 10;
-            this.tabPage1.Location = new System.Drawing.Point(4, 41);
+            this.tabPage1.Location = new System.Drawing.Point(4, 75);
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Size = new System.Drawing.Size(513, 223);
+            this.tabPage1.Size = new System.Drawing.Size(513, 189);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Home";
             this.tabPage1.VerticalScrollbarBarColor = true;

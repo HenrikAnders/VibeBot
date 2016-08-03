@@ -14,8 +14,7 @@ using System.Collections.Generic;
 namespace VibeBot
 {
     public partial class VibeBot : MetroForm
-    {
-        Bot bot;
+    {             
         bool singleFile = false;
         public VibeBot()
         {
@@ -30,7 +29,8 @@ namespace VibeBot
             //   fillGrid(false);  //should wait until method is finished, but constructor can´t be asynch   
             tbAbout.Text = "About VibeBot \r\nThis program convert stereo wave files to stereo mp3 files.\r\nFiles are encoded with the samplerate of 44100 Hz (44.1kHz)\r\nThe result are 320kBits/s high quality audio files. The convertetd files\r\nwill be normalized at the given value, without any loss of data.\r\nAfter that, track artist and title is written into the metadata.\r\nThis is called tagging. Tagging will only be succsessfully, if the filename is in the required synthax.\r\nFor example: Dj Reverb - Hydra\r\n'Dj Reverb' is the artist and 'Hydra' the title, the elements \r\nare seperated by a hyphen. Keep the right order.";
             tabControl.SelectedTab = tabPage1;
-            tabControl.DisableTab(tabempty);
+            tabControl.DisableTab(tabempty); //placeholder tab
+            Bot.Instance().path = tbPath.Text; 
         }
 
         private async void bRun_Click_1(object sender, EventArgs e)
@@ -52,17 +52,17 @@ namespace VibeBot
                     pComplete.Visible = false;
                     tbState.Text = "";
 
-                    bot = new Bot(setPath(tbPath.Text));
+                    Bot.Instance().path = setPath(tbPath.Text);   
                     tbState.AppendText("Info:");
 
                     pLoad.Visible = true;
-                    await Task.Run(() => bot.convert(cbDelete.Checked));
+                    await Task.Run(() => Bot.Instance().convert(cbDelete.Checked));
                     tbState.AppendText(" Converted \u221A, ");
 
-                    await Task.Run(() => bot.normalyze(float.Parse(tbdB.Text, CultureInfo.InvariantCulture.NumberFormat), cbReset.Checked));
+                    await Task.Run(() => Bot.Instance().normalyze(float.Parse(tbdB.Text, CultureInfo.InvariantCulture.NumberFormat), cbReset.Checked));
                     tbState.AppendText("normalized \u221A");
 
-                    await Task.Run(() => bot.tagging());
+                    await Task.Run(() => Bot.Instance().tagging());
                     tbState.AppendText(", tagged \u221A");
 
                     tbState.ForeColor = System.Drawing.Color.Blue;
@@ -261,9 +261,8 @@ namespace VibeBot
             dt.Columns.Add("Track");
             dt.Columns.Add("Gain");      
             if (validate())
-            {
-                bot = new Bot(tbPath.Text);
-                foreach (KeyValuePair<string, string> kvp in bot.analyze(this.tbPath.Text, reanalyze))
+            {    
+                foreach (KeyValuePair<string, string> kvp in Bot.Instance().analyze(this.tbPath.Text, reanalyze))
                 {
                     row = dt.NewRow();
                     row["Track"] = kvp.Key;
@@ -316,13 +315,12 @@ namespace VibeBot
         }
 
         private void deleteListener(object sender, KeyEventArgs e)
-        {   //button "del" listener   KeyPress   
-            bot = new Bot(setPath(this.tbPath.Text));
+        {   //button "del" listener   KeyPress          
             if (e.KeyCode == Keys.Delete)
             {
                 foreach (DataGridViewRow item in gridAnalyze.SelectedRows)
                 {
-                    bot.deleteSelection(item.Cells["Track"].Value.ToString());
+                    Bot.Instance().deleteSelection(item.Cells["Track"].Value.ToString());
                     gridAnalyze.Rows.RemoveAt(item.Index);
                 }
             }
