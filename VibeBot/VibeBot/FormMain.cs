@@ -11,6 +11,7 @@ using Microsoft.Win32;
 using System.Data;
 using System.Collections.Generic;
 
+
 namespace VibeBot
 {
     public partial class VibeBot : MetroForm
@@ -28,9 +29,13 @@ namespace VibeBot
             this.MaximizeBox = false;
             //   fillGrid(false);  //should wait until method is finished, but constructor can´t be asynch   
             tbAbout.Text = "About VibeBot \r\nThis program convert stereo wave files to stereo mp3 files.\r\nFiles are encoded with the samplerate of 44100 Hz (44.1kHz)\r\nThe result are 320kBits/s high quality audio files. The convertetd files\r\nwill be normalized at the given value, without any loss of data.\r\nAfter that, track artist and title is written into the metadata.\r\nThis is called tagging. Tagging will only be succsessfully, if the filename is in the required synthax.\r\nFor example: Dj Reverb - Hydra\r\n'Dj Reverb' is the artist and 'Hydra' the title, the elements \r\nare seperated by a hyphen. Keep the right order.";
+
             tabControl.SelectedTab = tabPage1;
             tabControl.DisableTab(tabempty); //placeholder tab
-            Bot.Instance().path = tbPath.Text; 
+            Bot.Instance().path = tbPath.Text;
+            progressBar.Step = 1;
+            progressBar.Style = MetroColorStyle.Blue;
+            progressBar.Visible = true;       
         }
 
         private async void bRun_Click_1(object sender, EventArgs e)
@@ -39,36 +44,34 @@ namespace VibeBot
             {
 
                 if (!singleFile && Directory.GetFiles(this.tbPath.Text, "*.wav").Length == 0 && Directory.GetFiles(this.tbPath.Text, "*.mp3").Length == 0)
-                {
+                {                              
+                    resetStatus();
                     MetroMessageBox.Show(this, "No mp3/wav files found on the given path", "");
                 }
                 else
                 {
+                   
                     resetStatus();
                     tbdB.Enabled = false;
                     tbPath.Enabled = false;
                     cbDelete.Enabled = false;
                     cbReset.Enabled = false;
                     pComplete.Visible = false;
-                    tbState.Text = "";
-
-                    Bot.Instance().path = setPath(tbPath.Text);   
-                    tbState.AppendText("Info:");
-
                     pLoad.Visible = true;
+                    Bot.Instance().path = setPath(tbPath.Text);   
+                    tbState.AppendText("Info:");         
+                                                         
                     await Task.Run(() => Bot.Instance().convert(cbDelete.Checked));
-                    tbState.AppendText(" Converted \u221A, ");
+                    tbState.AppendText(" Converted \u221A, ");  
+                              
+                    Task.Run(() => Bot.Instance().normalyze(float.Parse(tbdB.Text, CultureInfo.InvariantCulture.NumberFormat), cbReset.Checked));
+                    tbState.AppendText("normalized \u221A");         
 
-                    await Task.Run(() => Bot.Instance().normalyze(float.Parse(tbdB.Text, CultureInfo.InvariantCulture.NumberFormat), cbReset.Checked));
-                    tbState.AppendText("normalized \u221A");
-
-                    await Task.Run(() => Bot.Instance().tagging());
-                    tbState.AppendText(", tagged \u221A");
+                    Task.Run(() => Bot.Instance().tagging());
+                    tbState.AppendText(", tagged \u221A");     
 
                     tbState.ForeColor = System.Drawing.Color.Blue;
-                    pLoad.Visible = false;
-                    pComplete.Visible = true;
-
+                    pLoad.Visible = false;              
                     tbdB.Enabled = true;
                     tbPath.Enabled = true;
                     cbDelete.Enabled = true;
@@ -160,14 +163,16 @@ namespace VibeBot
 
         private void pathTextChanged(object sender, EventArgs e)
         {
-            pComplete.Visible = false;
+          //  pComplete.Visible = false;
+            progressBar.Value = 0;
             bRun.Enabled = validate();
         }
 
         private void tbDBTextChanged(object sender, EventArgs e)
         {
             resetStatus();
-            pComplete.Visible = false;
+            progressBar.Value = 0;
+          //  pComplete.Visible = false;
             lLevel.ForeColor = System.Drawing.Color.Black;
             try
             {     //if it´s not a positive number show "Invalid input"
@@ -246,7 +251,8 @@ namespace VibeBot
 
         private void cbDeleteChecked(object sender, EventArgs e)
         {
-            pComplete.Visible = false;
+            progressBar.Value = 0;
+            //pComplete.Visible = false;
             resetStatus();
         }
 
@@ -254,15 +260,19 @@ namespace VibeBot
         /// fill the dataGridView
         /// </summary>
         /// <param name="reanalyze">indicates whether the values have to be recalculated</param>
-        private  DataTable fillGrid(bool reanalyze)
+        private async Task<DataTable> fillGrid(bool reanalyze)
         {
             DataTable dt = new DataTable();
             DataRow row;
             dt.Columns.Add("Track");
-            dt.Columns.Add("Gain");      
+            dt.Columns.Add("Gain");
+            List<KeyValuePair<string, string>> lAnalyzed = Bot.Instance().analyze(this.tbPath.Text, reanalyze);
+
+            this.Invoke((MethodInvoker)(() => {progressBar.Maximum = lAnalyzed.Count; }));
+
             if (validate())
-            {    
-                foreach (KeyValuePair<string, string> kvp in Bot.Instance().analyze(this.tbPath.Text, reanalyze))
+            {
+                foreach (KeyValuePair<string, string> kvp in lAnalyzed)
                 {
                     row = dt.NewRow();
                     row["Track"] = kvp.Key;
@@ -275,7 +285,8 @@ namespace VibeBot
                     {
                         row["Gain"] = (kvp.Value);
                     }
-                    dt.Rows.Add(row);        
+                    dt.Rows.Add(row);
+                    this.Invoke((MethodInvoker)(() => { progressBar.PerformStep(); }));     
                 }
             }
             else
@@ -283,19 +294,19 @@ namespace VibeBot
                 row = dt.NewRow();
                 row["Track"] = " !No files found on the given path! ";
                 dt.Rows.Add(row);
-            }                                      
+            }                
             return dt;
         }
 
         private async void bReanalyze(object sender, EventArgs e)
         {   //click Listener    
             //  animation();  //no function...don´t no why 
-            pComplete.Visible = false;
+            //pComplete.Visible = false;
+            progressBar.Value = 0;
             gridAnalyze.Visible = false;
             lArrow.Visible = false;
             pArrow.Visible = false;
-            tbAnaStatus.Text = "";
-            pLoad.Visible = true;
+            tbAnaStatus.Text = "";    
             gridAnalyze.DataSource = await Task.Run(() => fillGrid(true));
             tbAnaStatus.Text = gridAnalyze.RowCount<=1? "  " + gridAnalyze.RowCount + " entry": "  " + gridAnalyze.RowCount + " entries";
             //do all GridView stuff in here because from other Task is no access to gridview
@@ -308,10 +319,8 @@ namespace VibeBot
             gridAnalyze.RowHeadersVisible = false;
             gridAnalyze.CellBorderStyle = DataGridViewCellBorderStyle.RaisedVertical;
             gridAnalyze.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader);//optimize cell size
-            pLoad.Visible = false;        
+            gridAnalyze.FirstDisplayedScrollingRowIndex = 1; //workaround to show the scrollpane correctly 
             gridAnalyze.Visible = true;
-            gridAnalyze.FirstDisplayedScrollingRowIndex = 1; //workaround to show the scrollpane correctly
-            // tbState.SendToBack();
         }
 
         private void deleteListener(object sender, KeyEventArgs e)
